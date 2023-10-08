@@ -18,18 +18,30 @@
 
 <body>
 
-    
+
 
     <!-- As a heading -->
 
     <div class="d-flex justify-content-start align-items-center all flex-column">
-        <nav class="navbar navbar-light bg-black d-flex">
-            <div class="d-flex flex-row align-items-center justify-content-center text-center color-white">
-                <p>Busque sem limites, tenha o controle em suas mãos <a href=""><span style="color: gold; ">Seja
-                            VIP</span> <img style="margin-bottom: -7px;" src="img/coroa.png" alt=""></a>
+        <nav class="navbar navbar-light justify-content-between bg-black d-flex" style="width:100%;">
+            <div class="d-flex container flex-row align-items-center justify-content-between text-center color-white">
+
+                <p id="top-ser-vip" onclick="telas(2)">Busque sem limites, tenha o controle em suas mãos <span
+                        style="color: gold; ">Seja
+                        VIP</span> <img style="margin-bottom: -7px;" src="img/coroa.png" alt="">
                 </p>
 
+                <p id="top-e-vip"><span style="color: gold; ">Você é VIP</span> <img style="margin-bottom: -7px;"
+                        src="img/coroa.png" alt=""> </p>
+
+                
+                        @php
+                        if (session('nome')) {
+                            echo "<a href='" . route("logout") . "'><p>Sair</p></a>";
+                        }
+                        @endphp
             </div>
+
 
         </nav>
         <div class="d-flex gif mt-5">
@@ -42,10 +54,13 @@
             <div class="d-flex flex-column text-center justify-content-center align-items-center">
                 <p style="padding: 10px; color: white;" id="aviso">Consulte informações <span
                         style="color: gold">VIP</span> sobre um veículo</p>
-                <input type="text" id="dados" class="mb-4" value="" placeholder="Chave de ativação">
-                <button onclick="consulta()">Ativar</button>
-                <button class="mt-5 freetest " data-bs-toggle="modal" data-bs-target="#meuModal">Experimente
+                <input type="text" id="dados" maxlength="7" class="mb-4" value="" placeholder="Chave de ativação">
+                <button onclick="ativar_key()">Ativar</button>
+                <button onclick="login()" class="mt-3 freetest">
+                    Entrar</button>
+                <button class="mt-3 freetest " data-bs-toggle="modal" data-bs-target="#meuModal">Experimente
                     Grátis</button>
+                    
 
             </div>
         </div>';
@@ -59,8 +74,12 @@
                 echo '<div id="pesquisa">
                 <div class="d-flex flex-column text-center justify-content-center align-items-center">
                     <p style="padding: 10px; color: red;" id="aviso"></p>
-                    <input type="text" id="dados" class="mb-4" value="qgm6c28" placeholder="Placa do Veículo">
-                    <button onclick="autorizador();">Pesquisar</button>
+                    <input type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo">
+                    <button id="btnpesquisar2" class="d-none" style="background-color: gray; color: #c3c3c3; cursor:not-allowed" >Pesquisar</button>
+                    <button id="btnpesquisar" onclick="autorizador()">Pesquisar</button>
+                    <button id="btnativar"class="d-none" onclick="ativar_key()">Ativar</button>
+                    <button id="btnativar2" class="d-none" style="background-color: gray; color: #c3c3c3; cursor:not-allowed" >Ativar</button>
+
                 </div>
             </div>';
             }
@@ -141,7 +160,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" onclick="testegratis(1)">Teste Grátis</button>
+                    <button type="button" class="btn" onclick="telas(1)">Teste Grátis</button>
                 </div>
             </div>
             <div class="modal-content" id="part2modal">
@@ -169,9 +188,48 @@
 
                 </form>
             </div>
-            <div class="modal-content" id="part3modal">
+            <div class="modal-content" id="part4modal">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Não perca o controle!</h5>
+                    <h5 class="modal-title" style="font-weight: bold;" id="exampleModalLabel">Entre em sua conta</h5>
+                </div>
+                @if (session('mensagem'))
+                    <div class="alert alert-success">
+                        {{ session('mensagem') }}
+                    </div>
+                @endif
+                <form method="post" action="{{ route('login') }}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="d-flex flex-column">
+                            <input type="email" name="email" class="inputtest mt-2"
+                                placeholder="Digite seu email" required>
+                            <input type="password" name="senha" class="inputtest mt-2" placeholder="Senha"
+                                required>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn">Entrar</button>
+                    </div>
+                </form>
+
+                </form>
+            </div>
+            <div class="modal-content" id="part3modal">
+                <div class="modal-header d-flex align-items-center">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Não perca o controle!
+                    </h5>
+                    <p style="
+                    margin: 0px !important;
+                    padding: 8px !important;
+                    background: #00a86b;
+                    color: white;
+                    border-radius: 17px;
+                    cursor: pointer;
+                "
+                        onclick="telas(3)">
+                        Inserir Chave
+
                 </div>
                 <div class="modal-body">
                     <p>Eai, gostou ? é claro né ! Não fique sem acesso, torne-se um apoiador <img
@@ -190,7 +248,8 @@
                     </p>
                 </div>
                 <div class="modal-body d-flex flex-column justify-content-center align-items-center">
-                    <div style="
+                    <div
+                        style="
                     position: relative;
                     top: -51px;
                     left: 31px;
@@ -222,6 +281,7 @@
     text-decoration-thickness: from-font;
     color: #c3c3c3;
                     ">
+
                                 80,00</p>
 
                         </div>
@@ -242,23 +302,25 @@
 
                     ">
                                 14,99</p>
-                                <p style="
+                            <p
+                                style="
                                 top: 5px;
                                 position: relative;
                                 left: -33px;
                                 color: #919191;
                                 font-size:14px;
-                            ">Acesso liberado na hora*</p>
+                            ">
+                                Acesso liberado na hora*</p>
 
                         </div>
                     </div>
                 </div>
-            <div class="modal-footer">
-                <button type="button" class="btn" onclick="sejaApoiador()">Torne-se um Apoiador
-                    VIP</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="sejaApoiador()">Torne-se um Apoiador
+                        VIP</button>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
 
@@ -268,18 +330,119 @@
     <script>
         document.getElementById("part2modal").style.display = 'none';
         document.getElementById("part3modal").style.display = 'none';
+        btnpesquisar = document.getElementById("btnpesquisar");
+        btnpesquisar2 = document.getElementById("btnpesquisar2");
+        divnaovip = document.getElementById("top-ser-vip");
+        divevip = document.getElementById("top-e-vip");
 
-        function testegratis(x) {
+        btnativar = document.getElementById("btnativar");
+        btnativar2 = document.getElementById("btnativar2");
+        inputdados = document.getElementById("dados");
+        alert = document.getElementById("aviso");
+        var id = @json(session('email'));
+        var csrfToken = "{{ csrf_token() }}";
+
+        var dados = new FormData();
+
+        dados.append('id', id);
+
+        var url = '/usr-info';
+
+        $.ajax({
+            url: url,
+            method: 'post',
+            data: dados,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(data) {
+
+                if (data.pro == 1) {
+                    ses_pesq();
+                    divnaovip.classList.add("d-none");
+
+                } else {
+                    divevip.classList.add("d-none");
+
+                }
+
+            }
+
+        });
+
+
+        function login() {
+            telas(4);
+        }
+
+
+        function ses_atv() {
+            campo = document.getElementById("dados");
+            btnativar = document.getElementById("btnativar");
+            btnpesquisar = document.getElementById("btnpesquisar");
+            campo.value = '';
+            campo.placeholder = 'Chave de ativação';
+            btnativar.classList.remove("d-none");
+            btnpesquisar.classList.add("d-none");
+            btnpesquisar2.classList.add("d-none");
+            btnativar2.classList.add("d-none");
+
+        }
+
+        function ses_pesq() {
+            campo = document.getElementById("dados");
+            btnativar = document.getElementById("btnativar");
+            btnpesquisar = document.getElementById("btnpesquisar");
+            campo.value = '';
+            campo.placeholder = 'PLACA DO VEÍCULO';
+            btnpesquisar.classList.remove("d-none");
+            btnativar.classList.add("d-none");
+            btnpesquisar2.classList.add("d-none");
+            btnativar2.classList.add("d-none");
+            localStorage.removeItem('atv_on');
+
+        }
+
+        if (localStorage.getItem('atv_on')) {
+            ses_atv()
+        }
+
+        function telas(x) {
 
             if (x == 1) {
+                document.getElementById("part4modal").style.display = 'none';
                 document.getElementById("part3modal").style.display = 'none';
                 document.getElementById("part2modal").style.display = 'block';
                 document.getElementById("part1modal").style.display = 'none';
             } else if (x == 2) {
+                document.getElementById("part4modal").style.display = 'none';
                 document.getElementById("part3modal").style.display = 'block';
                 document.getElementById("part2modal").style.display = 'none';
                 document.getElementById("part1modal").style.display = 'none';
+                $('#meuModal').modal('show');
+
+            } else if (x == 3) {
+                $('#meuModal').modal('hide');
+                campo = document.getElementById("dados");
+                btnativar = document.getElementById("btnativar");
+                btnpesquisar = document.getElementById("btnpesquisar");
+                campo.value = '';
+                campo.placeholder = 'Chave de ativação';
+                btnativar.classList.remove("d-none");
+                btnpesquisar.classList.add("d-none");
+                localStorage.setItem('atv_on', 1);
+
+            } else if (x == 4) {
+                document.getElementById("part4modal").style.display = 'block';
+                document.getElementById("part3modal").style.display = 'none';
+                document.getElementById("part2modal").style.display = 'none';
+                document.getElementById("part1modal").style.display = 'none';
+                $('#meuModal').modal('show');
+
             } else {
+                document.getElementById("part4modal").style.display = 'none';
                 document.getElementById("part3modal").style.display = 'none';
                 document.getElementById("part2modal").style.display = 'none';
                 document.getElementById("part1modal").style.display = 'block';
@@ -287,6 +450,7 @@
 
         }
     </script>
+
     <script>
         var resultados = []; // Array para armazenar os resultados
         var indiceAtual = 0; // Índice do resultado atual
@@ -301,6 +465,7 @@
             dados.append('xyz', xyz);
             var url = '/api/placa/' + encodeURIComponent(xyz);
 
+
             $.ajax({
                 url: url,
                 method: 'get',
@@ -310,13 +475,15 @@
                 success: function(data) {
                     resultados = data.Data; // Armazena os resultados no array
                     if (resultados.length === 0) {
-                        document.getElementById("aviso").innerHTML =
+                        alert.innerHTML =
                             'Não foi encontrado nenhum veículo com essa placa';
                         document.getElementById("showpesquisa").style.display = 'none';
                         document.getElementById("pesquisa").style.display = 'block';
+                        ses_pesq();
                     } else {
                         exibirResultado(indiceAtual); // Exibe o primeiro resultado
-
+                        btnpesquisar2.classList.add("d-none");
+                        btnpesquisar.classList.remove("d-none");
                     }
                 }
             });
@@ -324,9 +491,66 @@
 
         }
 
+        function ativar_key() {
+            var csrfToken = "{{ csrf_token() }}";
+
+            if (inputdados.value.length < 7) {
+                inputdados.focus();
+                document.getElementById("aviso").innerHTML =
+                    'Preencha o campo abaixo';
+
+                return;
+            }
+
+            btnativar.classList.add("d-none");
+            btnativar2.classList.remove("d-none");
+
+            var dados = new FormData();
+            var id = @json(session('email'));
+            dados.append('chave', inputdados.value);
+            dados.append('id', id);
+
+            var url = '/ativar-vip/';
+
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: dados,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(data) {
+                    if (data == 200) {
+                        alert(data);
+                        ses_pesq();
+
+                    } else {
+
+                        alert.innerHTML =
+                            'A chave inserida não é válida';
+                    }
+                }
+            });
+        }
+
+
+
 
         function autorizador() {
             var csrfToken = "{{ csrf_token() }}";
+
+            if (inputdados.value.length < 7) {
+                inputdados.focus();
+                document.getElementById("aviso").innerHTML =
+                    'Preencha o campo abaixo';
+
+                return;
+            }
+
+            btnpesquisar.classList.add("d-none");
+            btnpesquisar2.classList.remove("d-none");
 
             var dados = new FormData();
             var id = @json(session('email'));
@@ -345,10 +569,14 @@
                 success: function(data) {
                     if (data == 200) {
                         consulta();
+
                     } else {
                         $('#meuModal').modal('show');
                         console.log("nao pode");
-                        testegratis(2);
+                        ses_atv()
+                        telas(2);
+                        localStorage.setItem('atv_on', 1);
+
                     }
                 }
             });

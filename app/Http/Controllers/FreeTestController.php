@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 
@@ -30,7 +31,6 @@ class FreeTestController extends Controller
         'ip' => $cad->ip,
       ]);
       Cookie::queue(Cookie::make('laravel_session', Session::getId(), 60 * 24 * 365 * 10));
-
     }
 
 
@@ -45,17 +45,16 @@ class FreeTestController extends Controller
     $id = $request->input('id');
     $usr = freetestModel::where('email', '=', $id)->first();
 
-    if($usr->qtdconsultas && $usr->qtdconsultas > 2){
+    if ($usr->pro == 1) {
+      return 200;
+    } else if ($usr->qtdconsultas && $usr->qtdconsultas > 2) {
 
       return 201;
+    } else {
 
-    }else{
-  
-        $usr->qtdconsultas = $usr->qtdconsultas + 1;
-        $usr->save();
-        return 200;
+      $usr->qtdconsultas = $usr->qtdconsultas + 1;
+      $usr->save();
+      return 200;
     }
-
-    
   }
 }
