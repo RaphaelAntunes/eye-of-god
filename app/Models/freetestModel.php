@@ -9,7 +9,7 @@ class freetestModel extends Model
 {
     protected $table = 'free_test_user';
     protected $fillable = [
-        'nome','email','ip','qtdconsultas','telefone',
+        'nome','email','ip','qtdconsultas','telefone','senha'
     ];    public $timestamps = false; // Desabilita as colunas de data e hora
 
 }

@@ -19,6 +19,10 @@ class MemberController extends Controller
         $dataHoraAtual = Carbon::now();
         $dataHoraFormatada = $dataHoraAtual->toDateTimeString();
 
+        if ($id === 'null') {
+            return 202;
+        }
+
         try {
             // Tenta encontrar o registro com base na chave
             $verify = MemberModel::where('chave', $chave)->firstOrFail();
@@ -50,7 +54,18 @@ class MemberController extends Controller
         $id = $request->input('id');
         $usr = freetestModel::where('email', $id)->first();
 
-        return $usr;
+        if ($usr) {
+            session([
+                'nome' => $usr->nome,
+                'email' => $usr->email,
+                'pro' => $usr->pro,
+            ]);
+
+            return $usr;
+        } else {
+
+            return 300;
+        }
     }
 
 
@@ -68,16 +83,61 @@ class MemberController extends Controller
                 session([
                     'nome' => $usr->nome,
                     'email' => $usr->email,
+                    'pro' => $usr->pro,
                 ]);
                 return redirect()->back();
+            } else if ($usr->senha == null) {
+                $usr->senha = $senha;
+                $usr->save();
+                session([
+                    'nome' => $usr->nome,
+                    'email' => $usr->email,
+                    'pro' => $usr->pro,
+                ]);
+                return redirect()->back();
+            } else {
+                return redirect()->back()->withErrors(['message' => 'Usuário ou senha incorretos']);
             }
-            return password_verify($senha, $usr->senha);
+        } else {
+            return redirect()->back()->withErrors(['message' => 'Usuário ou senha incorretos']);
+        }
+    }
+    public function cadastro(Request $request)
 
-            if (password_verify($senha, $usr->senha)) {
-                // A senha é válida, o usuário está autenticado
-                // Você pode adicionar o usuário à sessão ou realizar outras ações de autenticação aqui
-                return 'senha ok';
+
+
+
+    {
+
+        $id = $request->input('email');
+        $usr = freetestModel::where('email', $id)->first();
+
+        if ($usr) {
+            return redirect()->back()->withErrors(['message' => 'O E-mail já foi cadastrado. Entre para continuar !']);
+        } else {
+
+            $cad = new freetestModel([
+                'nome' => $request->input('nome'),
+                'email' => $request->input('email'),
+                'telefone' => $request->input('whatsapp'),
+                'senha' => $request->input('senha'),
+                'ip' => $request->ip(),
+
+            ]);
+
+            $cad->save();
+
+            if ($cad) {
+                session([
+                    'nome' => $cad->nome,
+                    'email' => $cad->email,
+                    'ip' => $cad->ip,
+                    'pro' => 0,
+                ]);
             }
+
+
+            return redirect()->back()->withErrors(['message' => 'Contra criada com sucesso']);
         }
     }
 

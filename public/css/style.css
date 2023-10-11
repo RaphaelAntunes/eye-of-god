@@ -274,13 +274,46 @@ button {
 }
 
 .freetest {
-    font-size: 18px;
-    border: 1px solid white;
+    font-size: 15px;
+    border: 1px solid #00a86b;
     background: none !important;
-    width: 200px;
+    width: 160px;
+    cursor: pointer;
+    transition: .5s;
+}
+
+.freetest:hover {
+    font-size: 18px;
+    background: #00a86a67 !important;
 }
 
 .inputtest {
     background-color: white;
     width: 100%;
+}
+
+#accordion>.card {
+    background: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-open {
+    background-color: #1C5E46 !important;
+    color: white;
+    height: 40px;
+    text-decoration: none !important;
+}
+
+.btn-open:hover {
+    color: white;
+    text-decoration: none !important;
+    background-color: #00a86b !important;
+}
+
+#accordion {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 }

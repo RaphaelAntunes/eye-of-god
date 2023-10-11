@@ -29,6 +29,7 @@ class FreeTestController extends Controller
         'nome' => $cad->nome,
         'email' => $cad->email,
         'ip' => $cad->ip,
+        'pro' => 0,
       ]);
       Cookie::queue(Cookie::make('laravel_session', Session::getId(), 60 * 24 * 365 * 10));
     }
