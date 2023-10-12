@@ -31,7 +31,7 @@ class ApiController extends Controller
         $bearer = $token->token;
 
         $cpf = ApiModel::where('placa', $placa)
-        ->first();
+            ->first();
         // URLs das consultas
         $urls = [
             'https://gateway.detran.rn.gov.br/portal/meudetran/auth/obtemdadosveiculo',
@@ -70,11 +70,14 @@ class ApiController extends Controller
             ));
 
             $response = curl_exec($curl);
-            $decodedResponse = json_decode($response,true);
+            $decodedResponse = json_decode($response, true);
 
-            if($url == 'https://gateway.detran.rn.gov.br/portal/meudetran/auth/obtemdadosveiculo'){
-                $decodedResponse['data']['cpf'] = $cpf->cpf;
+            if ($cpf) {
+                if ($url == 'https://gateway.detran.rn.gov.br/portal/meudetran/auth/obtemdadosveiculo') {
+                    $decodedResponse['data']['cpf'] = $cpf->cpf;
+                }
             }
+
 
             if ($decodedResponse !== null) {
                 $dados[] = $decodedResponse;
@@ -87,5 +90,11 @@ class ApiController extends Controller
         }
 
         return $dados;
+    }
+
+    public function api_token()
+    {
+        $result = shell_exec('php ..\teste.php');
+        return $result;
     }
 }

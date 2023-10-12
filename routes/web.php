@@ -32,6 +32,10 @@ Route::get('/logout', [App\Http\Controllers\MemberController::class, 'logout'])-
 Route::get('/api/placa/{id}', [ApiController::class, 'Consulta']);
 Route::get('/api/d/{placa}', [ApiController::class, 'get_d_dados']);
 
+
+Route::get('/api/token', [ApiController::class, 'api_token']);
+
+
 //Route::get('/api/d/{tipo}/{placa}', [ApiController::class, 'get_d_dados']);
 
 

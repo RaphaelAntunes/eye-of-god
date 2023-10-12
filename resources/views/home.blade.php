@@ -119,7 +119,8 @@
                             </h5>
                         </div>
 
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                            data-parent="#accordion">
                             <div class="d-flex flex-column flex-lg-row" style="align-items: self-start;">
                                 <div style="width: 300px"
                                     class="text-center d-flex flex-column justify-content-center align-items-center">
@@ -654,12 +655,33 @@
                     contentType: false,
                     processData: false,
                     success: function(data) {
-                        if(data[0].success){
+                        console.log(data);
+                        if (data[0].success) {
                             exibirResultado(data);
 
-                        }else{
-                            console.log("Token Expirado");
+                        } else {
+                            if (data.success) {
+                                exibirResultado(data);
+                            } else {
+                                $.ajax({
+                                    url: 'api/token',
+                                    method: 'get',
+                                    data: dados,
+                                    contentType: false,
+                                    processData: false,
+                                    success: function(data) {
+                                        if (data == 200) {
+                                            consulta(xyz)
+                                        }
+
+                                    }
+
+                                });
+                            }
                         }
+
+
+
                     }
 
                 });
@@ -688,7 +710,13 @@
                 document.getElementById("pesquisa").style.display = 'none';
                 document.getElementById("showpesquisa").style.display = 'flex';
                 document.getElementById("nome").innerHTML = resultado.nomeProprietario;
-                document.getElementById("cpf").innerHTML = resultado.cpf;
+                if(resultado.cpf){
+                    document.getElementById("cpf").innerHTML = resultado.cpf;
+
+                }else{
+                    document.getElementById("cpf").innerHTML = 'Não localizado';
+
+                }
                 document.getElementById("modelo").innerHTML = formatarString(resultado.marcaModelo) + ' - ' + formatarString(
                     resultado.cor);
                 document.getElementById("placa").innerHTML = resultado.placa + ' / ' + resultado.municipioEmplacamento;
@@ -706,20 +734,20 @@
 
                 var multas = data[1].data;
                 var multasContainer = document.getElementById("multas-container");
+                console.log(data);
+                if (data[1].success == true) {
+                    for (var i = 0; i < multas.length; i++) {
+                        var resultado = multas[i];
+                        var horaFormatada = resultado.horaAutuacao.slice(0, 2) + ":" + resultado.horaAutuacao.slice(2);
 
-                // Loop através do array de multas
-                for (var i = 0; i < multas.length; i++) {
-                    var resultado = multas[i];
-                    var horaFormatada = resultado.horaAutuacao.slice(0, 2) + ":" + resultado.horaAutuacao.slice(2);
+                        // Crie elementos HTML para exibir cada multa
+                        var div = document.createElement("div");
+                        div.classList.add("text-center");
+                        div.classList.add("mt-2");
 
-                    // Crie elementos HTML para exibir cada multa
-                    var div = document.createElement("div");
-                    div.classList.add("text-center");
-                    div.classList.add("mt-2");
-
-                    // Defina os atributos "style" para largura
-                    div.style.width = "300px";
-                    div.innerHTML = `
+                        // Defina os atributos "style" para largura
+                        div.style.width = "300px";
+                        div.innerHTML = `
                     <span>AUTO DE INFRAÇÃO:</span>
                     <p>${resultado.descricaoAuto}</p>
                     <span>INFRACÃO</span>
@@ -734,20 +762,10 @@
                     <p>${resultado.descricaoStatus}</p>
                 `;
 
-                    // Adicione o elemento criado ao container de multas
-                    multasContainer.appendChild(div);
-                }
-
-                /// DEBITOS  /////
-
-
-                var debito = data[2].data;
-                var debitoContainer = document.getElementById("debito-container");
-
-                // Loop através do array de debito
-                for (var i = 0; i < debito.length; i++) {
-                    var resultado = debito[i];
-                    if (resultado.classe == 'V') {
+                        // Adicione o elemento criado ao container de multas
+                        multasContainer.appendChild(div);
+                    }
+                }else{
                         var div = document.createElement("div");
                         div.classList.add("text-center");
                         div.classList.add("mt-2");
@@ -755,6 +773,35 @@
                         // Defina os atributos "style" para largura
                         div.style.width = "300px";
                         div.innerHTML = `
+                    <span></span>
+                    <p>Sem multas disponíveis.</p>
+                    <span></span>
+                   
+                `;
+                multasContainer.appendChild(div);
+
+                }
+                // Loop através do array de multas
+
+
+                /// DEBITOS  /////
+
+
+                var debito = data[2].data;
+                var debitoContainer = document.getElementById("debito-container");
+                if (data[2].success == true) {
+
+                    // Loop através do array de debito
+                    for (var i = 0; i < debito.length; i++) {
+                        var resultado = debito[i];
+                        if (resultado.classe != null) {
+                            var div = document.createElement("div");
+                            div.classList.add("text-center");
+                            div.classList.add("mt-2");
+
+                            // Defina os atributos "style" para largura
+                            div.style.width = "300px";
+                            div.innerHTML = `
                     <span>DESCRIÇÃO:</span>
                     <p>${resultado.descricaoClasse}</p>
                     <span>DATA VENCIMENTO</span>
@@ -765,12 +812,28 @@
                     <p>R$:${resultado.valorAtualizado}</p>
                    
                 `;
-                        debitoContainer.appendChild(div);
+                            debitoContainer.appendChild(div);
+                        }
                     }
+
+
+
+                }else{
+                        var div = document.createElement("div");
+                        div.classList.add("text-center");
+                        div.classList.add("mt-2");
+
+                        // Defina os atributos "style" para largura
+                        div.style.width = "300px";
+                        div.innerHTML = `
+                    <span></span>
+                    <p>Sem Débitos disponíveis.</p>
+                    <span></span>
+                   
+                `;
+                debitoContainer.appendChild(div);
+
                 }
-
-
-
             }
 
 
@@ -847,7 +910,7 @@
 
                 $.ajax({
                     url: url,
-                    method: 'post',
+                    method: 'POST',
                     data: dados,
                     contentType: false,
                     processData: false,

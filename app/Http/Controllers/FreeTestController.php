@@ -44,7 +44,7 @@ class FreeTestController extends Controller
   {
 
     $id = $request->input('id');
-    $usr = freetestModel::where('email', '=', $id)->first();
+    $usr = freetestModel::where('email', $id)->first();
 
     if ($usr->pro == 1) {
       return 200;
