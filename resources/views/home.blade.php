@@ -856,7 +856,7 @@
                 dados.append('chave', inputdados.value);
                 dados.append('id', id);
 
-                var url = '/ativar-vip/';
+                var url = '/ativar-vip';
 
                 $.ajax({
                     url: url,
@@ -906,7 +906,7 @@
                 var dados = new FormData();
                 var id = @json(session('email'));
                 dados.append('id', id);
-                var url = '/api/free-test/';
+                var url = '/api/free-test';
 
                 $.ajax({
                     url: url,
