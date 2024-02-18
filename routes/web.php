@@ -26,6 +26,7 @@ Route::post('/ativar-vip', [App\Http\Controllers\MemberController::class, 'ativa
 Route::post('/usr-info', [App\Http\Controllers\MemberController::class, 'buscarusr'])->name('buscar-usr');
 Route::post('/login', [App\Http\Controllers\MemberController::class, 'login'])->name('login');
 Route::post('/cadastro', [App\Http\Controllers\MemberController::class, 'cadastro'])->name('cadastro');
+Route::post('/cadastro-senha', [App\Http\Controllers\MemberController::class, 'cadastrosenha'])->name('cadastro-senha');
 Route::get('/logout', [App\Http\Controllers\MemberController::class, 'logout'])->name('logout');
 
 
@@ -34,6 +35,7 @@ Route::get('/api/d/{placa}', [ApiController::class, 'get_d_dados']);
 
 
 Route::get('/api/token', [ApiController::class, 'api_token']);
+Route::get('/api/captcha', [ApiController::class, 'captcha_get']);
 
 
 //Route::get('/api/d/{tipo}/{placa}', [ApiController::class, 'get_d_dados']);

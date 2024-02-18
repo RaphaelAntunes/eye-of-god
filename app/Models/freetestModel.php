@@ -13,3 +13,12 @@ class freetestModel extends Model
     ];    public $timestamps = false; // Desabilita as colunas de data e hora
 
 }
+
+class logModel extends Model
+{
+    protected $table = 'logs_busca';
+    protected $fillable = [
+        'conta','ip','placa',
+    ];    public $timestamps = false; // Desabilita as colunas de data e hora
+
+}

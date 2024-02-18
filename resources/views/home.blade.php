@@ -14,31 +14,42 @@
     <link rel="stylesheet" href="css/themify-icons.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+
 </head>
+
 
 <body>
 
 
 
     <!-- As a heading -->
-
+    <div id="loading">
+        <img src="img/giphy.gif" alt="Loading...">
+        <h1 id="labelbuscando">Buscando...</h1>
+    </div>
     <div class="d-flex justify-content-start align-items-center all flex-column">
         <nav class="navbar navbar-light justify-content-between bg-black d-flex" style="width:100%;">
-            <div class="d-flex container flex-row align-items-center justify-content-between text-center color-white">
+            <div class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
+                @php
+                    if (session('pro') == 0) {
+                        echo '<p id="top-ser-vip" class="justify-content-center align-items-center"  onclick="telas(2)">Busque sem limites, tenha o controle em suas mãos
+                    <span style="color: gold; ">Seja VIP</span> <img style="margin-bottom: -7px;" src="img/coroa.png" alt="">
+                </p>';
+                    }
+                @endphp
 
-                <p id="top-ser-vip" class="d-none" onclick="telas(2)">Busque sem limites, tenha o controle em suas mãos
-                    <span style="color: gold; ">Seja
-                        VIP</span> <img style="margin-bottom: -7px;" src="img/coroa.png" alt="">
-                </p>
 
-                <p id="top-e-vip" class="d-none"><span style="color: gold; ">Você é VIP</span> <img
-                        style="margin-bottom: -7px;" src="img/coroa.png" alt=""> </p>
 
 
                 @php
 
-                    if (session('pro') == '1') {
+                    if (session('pro') == 1) {
+                        echo '<div class="d-flex container justify-content-between align-items-center">';
+                        echo '<p ><span style="color: gold; ">Você é VIP</span> <img
+                        style="margin-bottom: -7px;" src="img/coroa.png" alt=""> </p>';
                         echo "<a href='" . route('logout') . "'><p>Sair</p></a>";
+                        echo '</div>';
                     }
                 @endphp
             </div>
@@ -52,6 +63,19 @@
                     class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
 
                     <p style="color: white;font-weight:bold;">🚨{{ $errors->first('message') }}🚨</p>
+                </div>
+
+
+            </nav>
+        @endif
+
+        @if (session('message'))
+            <nav class="navbar navbar-light justify-content-center bg-black d-flex"
+                style="width:100%; background-color: red; ">
+                <div
+                    class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
+
+                    <p style="color: white;font-weight:bold;">🚨 {{ session('message') }} 🚨</p>
                 </div>
 
 
@@ -97,6 +121,7 @@
                 <div class="d-flex flex-column text-center justify-content-center align-items-center">
                     <p style="padding: 10px; color: red;" id="aviso"></p>
                     <input type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo">
+                    <button id="btnpesquisar3" onclick="novaPesquisa()">Nova Pesquisa</button>
                     <button id="btnpesquisar2" class="d-none" style="background-color: gray; color: #c3c3c3; cursor:not-allowed" >Pesquisar</button>
                     <button id="btnpesquisar" onclick="autorizador()">Pesquisar</button>
                     <button id="btnativar"class="d-none" onclick="ativar_key()">Ativar</button>
@@ -108,13 +133,33 @@
         @endphp
         <div id="showpesquisa" style="background: black; display: none !important;">
             <div class="showpesquisa d-flex flex-column justify-content-center align-items-center">
+                <div id="card-roubo" class="mb-2 mt-2" style="background-color: #f44336;
+                width: 100%;
+                padding: 10px;
+                justify-content: center;
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                border-radius: 0.25rem;
+                display: none;
+            }">
+                    
+                </div>
+                <button id="btncrlv"
+                    style="line-height: 15px;
+                cursor:pointer;
+                width: 102px;
+                height: 56px;
+                font-size: 13px;
+                background:#f44336;">BAIXAR
+                    - CRLV</button>
                 <div id="accordion">
                     <div class="card">
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseOne"
                                     aria-expanded="true" aria-controls="collapseOne">
-                                    Dados Gerais
+                                    Dados Proprietario
                                 </button>
                             </h5>
                         </div>
@@ -124,23 +169,90 @@
                             <div class="d-flex flex-column flex-lg-row" style="align-items: self-start;">
                                 <div style="width: 300px"
                                     class="text-center d-flex flex-column justify-content-center align-items-center">
-
+                            
                                     <span>PROPRIETÁRIO:</span>
                                     <p id="nome"></p>
                                     <span>CPF:</span>
                                     <p id="cpf"></p>
-                                    <span>MODELO:</span>
-                                    <p id="modelo"></p>
-                                    <span>PLACA:</span>
-                                    <p id="placa"></p>
-                                    <span>RENAVAM:</span>
-                                    <p id="renavam"></p>
-                                    <span>PROPRIETÁRIO ANTERIOR:</span>
-                                    <p id="proprietario-anterior"></p>
+                                    <div id="divcomp" style="display:none;width: 100%;">
+                                        <span>Telefone:</span>
+                                        <p id="telefone"></p>
+                                        <span>E-mail:</span>
+                                        <p id="email"></p>
+                                        <span>Data de Nascimento:</span>
+                                        <p id="datanascimento"></p>
+                                    </div>
+                                    <span>DATA AQUISIÇÃO:</span>
+                                    <p id="dataaquisicao"></p>
                                 </div>
 
 
 
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseVeiculo"
+                                    aria-expanded="true" aria-controls="collapseVeiculo">
+                                    Dados Veiculo </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseVeiculo" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="d-flex flex-column flex-lg-row"
+                                style="align-items: self-start;">
+                                <div style="width: 300px"
+                                    class="text-center d-flex flex-column justify-content-center align-items-center">
+                            
+                                    <span>MODELO:</span>
+                                    <p id="modelo"></p>
+                                    <span>COR:</span>
+                                    <p id="cor"></p>
+                                    <div id="divpotencia" style="display:none;width: 100%;">
+                                        <span>POTÊNCIA:</span>
+                                        <p id="potencia"></p>
+                                    </div>
+                                    <span>FABRICAÇÃO/MODELO:</span>
+                                    <p id="fabmodelo"></p>
+                                    <span>COMBUSIVEL:</span>
+                                    <p id="combustivel"></p>
+                                    <span>LUGARES:</span>
+                                    <p id="lugares"></p>
+                                    <span>PLACA:</span>
+                                    <p id="placa"></p>
+                                    <span>PLACA ANTERIOR:</span>
+                                    <p id="placaanterior"></p>
+                                    <span>RENAVAM:</span>
+                                    <p id="renavam"></p>
+                                    <span>EMPLACAMENTO EM:</span>
+                                    <p id="emplacamentoem"></p>
+                                    <span>PROPRIETÁRIO ANTERIOR:</span>
+                                    <p id="proprietario-anterior"></p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseFor"
+                                    aria-expanded="true" aria-controls="collapseFor">
+                                    Infrações </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseFor" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="d-flex flex-column flex-lg-row" id="infracao-container"
+                                style="align-items: self-start;">
 
                             </div>
                         </div>
@@ -158,7 +270,8 @@
                             </h5>
                         </div>
 
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingOne"
+                            data-parent="#accordion">
                             <div class="d-flex flex-column flex-lg-row" id="multas-container"
                                 style="align-items: self-start;">
 
@@ -189,6 +302,7 @@
 
 
                     </div>
+
 
 
                     <div class="d-flex justify-content-between mt-5">
@@ -249,12 +363,13 @@
                         <div class="modal-body">
                             <P>Falta pouco, você está a <b style="font-weight: bold ">um clique</b> de começar!</P>
                             <div class="d-flex flex-column">
-                                <input type="text" name="nome" minlength="5" class="inputtest mt-2"
+                                <input type="text" name="nome" minlength="3" class="inputtest mt-2"
                                     placeholder="Digite seu nome" required>
                                 <input type="email" name="email" class="inputtest mt-2"
                                     placeholder="Digite seu e-mail" required>
-                                <input type="text" name="telefone" class="inputtest mt-2" placeholder="WhatsApp"
-                                    required>
+                                <input type="text" id="whatsapp" name="telefone" maxlength="15"
+                                    class="inputtest mt-2" onkeyup="mascaraWhatsApp(this.value)"
+                                    placeholder="WhatsApp" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -325,14 +440,45 @@
                                     placeholder="Digite seu nome" required>
                                 <input type="email" name="email" class="inputtest mt-2"
                                     placeholder="Digite seu email" required>
-                                <input type="text" name="whatsapp" class="inputtest mt-2" placeholder="Whatsapp"
-                                    required>
-                                <input type="password" name="senha" class="inputtest mt-2" placeholder="Senha"
-                                    required>
+                                <input type="text" id="whatsapp2" name="whatsapp" class="inputtest mt-2"
+                                    maxlength="15" placeholder="Whatsapp" required
+                                    onkeyup="mascaraWhatsApp(this.value)">
+                                <input type="text" id="cadsenha" name="senha" class="inputtest mt-2"
+                                    oninput="vsenhacad()" placeholder="Senha" required>
+                                <input type="text" id="cadsenha2" name="senha2" class="inputtest mt-2"
+                                    oninput="vsenhacad()" placeholder="Confirme a senha" required>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn">Cadastrar</button>
+                            <button type="submit" id="btncadsenha" class="btn" disabled>Cadastrar</button>
+                        </div>
+                    </form>
+
+                    </form>
+                </div>
+                <div class="modal-content" id="part7modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="font-weight: bold;" id="exampleModalLabel">Defina uma senha
+                            para sua conta</h5>
+                    </div>
+                    @if (session('mensagem'))
+                        <div class="alert alert-success">
+                            {{ session('mensagem') }}
+                        </div>
+                    @endif
+                    <form method="post" action="/cadastro-senha">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="d-flex flex-column">
+                                <input type="hidden" name="email" value="{{ session('email') }}">
+                                <input type="text" id="beforesenha" oninput="vbeforesenha()" name="senha"
+                                    class="inputtest mt-2" placeholder="Senha" required>
+                                <input type="text" name="senha2" oninput="vbeforesenha()" id="beforesenha2"
+                                    class="inputtest mt-2" placeholder="Confirme a senha" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="btnbeforesenha" disabled class="btn">Cadastrar</button>
                         </div>
                     </form>
 
@@ -406,7 +552,7 @@
     color: #c3c3c3;
                     ">
 
-                                    80,00</p>
+                                    139,00</p>
 
                             </div>
                             <div>
@@ -425,7 +571,7 @@
                         color: #00a86b;
 
                     ">
-                                    14,99</p>
+                                    49,99</p>
                                 <p
                                     style="
                                 top: 5px;
@@ -440,8 +586,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn" onclick="sejaApoiador()">Torne-se um Apoiador
-                            VIP</button>
+                        <a href="https://wa.me/5584998954309?text=Tenho+interesse+no+APP+de+consulta+de+placas"
+                            target="_blank"><button type="button" class="btn">Torne-se um Apoiador
+                                VIP</button></a>
                     </div>
                 </div>
             </div>
@@ -467,7 +614,50 @@
             document.getElementById("part4modal").style.display = 'none';
             document.getElementById("part5modal").style.display = 'none';
             document.getElementById("part6modal").style.display = 'none';
+            document.getElementById("part7modal").style.display = 'none';
+            document.getElementById("btnpesquisar3").style.display = 'none';
 
+            function mascaraWhatsApp(valor) {
+                valor = valor.replace(/\D/g, '');
+                valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2');
+                valor = valor.replace(/(\d)(\d{4})$/, '$1-$2');
+                document.getElementById('whatsapp').value = valor;
+                document.getElementById('whatsapp2').value = valor;
+
+            }
+
+            function exibirLoading() {
+                document.getElementById('loading').style.display = 'block';
+            }
+
+            // Ocultar tela de loading
+            function ocultarLoading() {
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            function vsenhacad() {
+                var senha = document.getElementById('cadsenha').value;
+                var confirmarSenha = document.getElementById('cadsenha2').value;
+                var botao = document.getElementById('btncadsenha');
+
+                if (senha === confirmarSenha && senha.length > 0) {
+                    botao.disabled = false;
+                } else {
+                    botao.disabled = true;
+                }
+            }
+
+            function vbeforesenha() {
+                var senha = document.getElementById('beforesenha').value;
+                var confirmarSenha = document.getElementById('beforesenha2').value;
+                var botao = document.getElementById('btnbeforesenha');
+
+                if (senha === confirmarSenha && senha.length > 0) {
+                    botao.disabled = false;
+                } else {
+                    botao.disabled = true;
+                }
+            }
             btnpesquisar = document.getElementById("btnpesquisar");
             btnpesquisar2 = document.getElementById("btnpesquisar2");
             divnaovip = document.getElementById("top-ser-vip");
@@ -623,6 +813,18 @@
                     document.getElementById("part1modal").style.display = 'none';
                     $('#meuModal').modal('show');
 
+                } else if (x == 8) {
+
+                    // TELA 1 ° EXPERIMENTE
+                    document.getElementById("part7modal").style.display = 'block';
+                    document.getElementById("part6modal").style.display = 'none';
+                    document.getElementById("part5modal").style.display = 'none';
+                    document.getElementById("part4modal").style.display = 'none';
+                    document.getElementById("part3modal").style.display = 'none';
+                    document.getElementById("part2modal").style.display = 'none';
+                    document.getElementById("part1modal").style.display = 'none';
+                    $('#meuModal').modal('show');
+
                 } else {
                     document.getElementById("part4modal").style.display = 'none';
                     document.getElementById("part3modal").style.display = 'none';
@@ -636,7 +838,7 @@
         <script>
             var resultados = []; // Array para armazenar os resultados
             var indiceAtual = 0; // Índice do resultado atual
-
+            document.getElementById("pesquisa").style.display = 'block';
             document.getElementById("showpesquisa").style.display = 'none';
             document.getElementById("anterior").style.display = 'none';
             document.getElementById("proximo").style.display = 'none';
@@ -646,45 +848,73 @@
                 var xyz = document.getElementById("dados").value;
                 dados.append('xyz', xyz);
                 var url = '/api/d/' + encodeURIComponent(xyz);
+                updateProgress();
 
 
                 $.ajax({
-                    url: url,
+                    url: 'api/token',
                     method: 'get',
                     data: dados,
                     contentType: false,
                     processData: false,
                     success: function(data) {
-                        console.log(data);
-                        if (data[0].success) {
-                            exibirResultado(data);
+                        if (data == 200) {
+                            $.ajax({
+                                url: url,
+                                method: 'get',
+                                data: dados,
+                                contentType: false,
+                                processData: false,
+                                success: function(data) {
+                                    console.log(data);
+                                    if (Object.keys(data).length == 0) {
+                                        alert.innerHTML =
+                                            'Placa incorreta ou veículo não pertencente ao RN';
+                                        document.getElementById('btnpesquisar2').style.display = 'none';
+                                        document.getElementById('btnpesquisar3').style.display =
+                                            'block';
+                                        ocultarLoading();
+                                        return;
+                                    }
+                                    if (data[1].success) {
+                                        exibirResultado(data);
 
-                        } else {
-                            if (data.success) {
-                                exibirResultado(data);
-                            } else {
-                                $.ajax({
-                                    url: 'api/token',
-                                    method: 'get',
-                                    data: dados,
-                                    contentType: false,
-                                    processData: false,
-                                    success: function(data) {
-                                        if (data == 200) {
-                                            consulta(xyz)
-                                        }
+                                    } else if (data[1].data[0] ==
+                                        'Placa Não Cadastrada na Base Local' || data == null) {
+                                        alert.innerHTML =
+                                            'Placa incorreta ou veículo não pertencente ao RN';
+                                        document.getElementById('btnpesquisar2').style.display = 'none';
+                                        document.getElementById('btnpesquisar3').style.display =
+                                            'block';
+                                        ocultarLoading();
+
+                                        return;
+                                    } else {
+                                        alert.innerHTML =
+                                            'Algum erro ocorreu, contate um responsável pelo sistema';
+                                        document.getElementById('btnpesquisar2').style.display = 'none';
+                                        document.getElementById('btnpesquisar3').style.display =
+                                            'block';
+                                        ocultarLoading();
+                                        return;
 
                                     }
+                                }
 
-                                });
-                            }
+                            });
+                        }else{
+                            alert.innerHTML =
+                                            'Autherror 404';
+                                        document.getElementById('btnpesquisar2').style.display = 'none';
+                                        document.getElementById('btnpesquisar3').style.display =
+                                            'block';
+                                        ocultarLoading();
+                                        return; 
                         }
-
-
-
                     }
-
                 });
+
+
 
 
             }
@@ -703,22 +933,99 @@
             }
 
             function exibirResultado(data) {
-                var resultado = data[0].data;
+                ocultarLoading();
+                console.log(data.length);
+                if (data.length == 4) {
+                    var resultado = data[0].data;
+                    var multas = data[1].data;
+                    var debito = data[2].data;
+                    var infracao = data[3].data;
+                    var resultadoX = data[0];
+                    var multasX = data[1];
+                    var debitoX = data[2];
+                    var infracaoX = data[3];
+                } else if (data.length == 5) {
+                    var complemento = data[2].data;
+                    var resultado = data[0].data;
+                    var multas = data[1].data;
+                    var debito = data[3].data;
+                    var infracao = data[4].data;
+                    var complementoX = data[2];
+                    var resultadoX = data[0];
+                    var multasX = data[1];
+                    var debitoX = data[3];
+                    var infracaoX = data[4];
+                }
+
+                
+
+                var btncrlv = document.getElementById('btncrlv');
+
+                if (complemento && complemento.documento) {
+                    var cpfLimpo = complemento.documento.replace(/\D/g, '');
+
+                    var linkcrlv = 'https://crlvdigital.detran.rn.gov.br/Home/ImprimirCRLV?placa=' + resultado.placa +
+                        '&renavam=' +
+                        resultado.renavam + '&documentoProprietario=' + cpfLimpo;
+
+                    //console.log(linkcrlv);
+
+                    btncrlv.addEventListener('click', function() {
+                        window.open(linkcrlv, '_blank');
+                    });
+                } else{
+                    btncrlv.remove();
+                }
+
+
+
+
 
                 /// DADOS GERAIS /////
                 document.getElementById("aviso").innerHTML = '';
                 document.getElementById("pesquisa").style.display = 'none';
                 document.getElementById("showpesquisa").style.display = 'flex';
                 document.getElementById("nome").innerHTML = resultado.nomeProprietario;
-                if(resultado.cpf){
-                    document.getElementById("cpf").innerHTML = resultado.cpf;
+                document.getElementById("cor").innerHTML = formatarString(resultado.cor);
 
-                }else{
+                if(resultado.potencia != 0){
+                    document.getElementById("divpotencia").style.display = 'block';
+                    document.getElementById("potencia").innerHTML = resultado.potencia;
+
+                }
+
+                document.getElementById("fabmodelo").innerHTML = resultado.anoFabricacaoModelo;
+                document.getElementById("combustivel").innerHTML = formatarString(resultado.combustivel);
+                document.getElementById("lugares").innerHTML = resultado.lugares;
+                document.getElementById("emplacamentoem").innerHTML = resultado.municipioEmplacamento;
+                document.getElementById("placaanterior").innerHTML = resultado.placaAnterior;
+                document.getElementById("dataaquisicao").innerHTML = resultado.dataAquisicao;
+
+                if(resultado.classe == 'rev-furto-roubo'){
+                    document.getElementById("card-roubo").style.display = 'block';
+                    document.getElementById("card-roubo").innerHTML = 'Veículo com queixa de Roubo / Furto. 🚨🚨🚨';
+                }
+                if(resultado.classe == 'rev-restricao'){
+                    document.getElementById("card-roubo").style.display = 'block';
+                    document.getElementById("card-roubo").innerHTML = 'Veículo com restrição';
+                }
+                if (complemento && complemento.documento) {
+                    document.getElementById("cpf").innerHTML = complemento.documento;
+
+                } else {
                     document.getElementById("cpf").innerHTML = 'Não localizado';
 
                 }
-                document.getElementById("modelo").innerHTML = formatarString(resultado.marcaModelo) + ' - ' + formatarString(
-                    resultado.cor);
+                if (Object.keys(data).length == 5 && complementoX.success === true && Object.keys(complemento).length > 1) {
+                    document.getElementById("divcomp").style.display = 'block';
+                    document.getElementById("telefone").innerHTML = complemento.telefone;
+                    document.getElementById("email").innerHTML = complemento.email;
+                    var dataNascimento = complemento.datanascimento;
+                    var dataFormatada = new Date(dataNascimento).toLocaleDateString('pt-BR');
+                    document.getElementById("datanascimento").innerHTML = dataFormatada;
+                }
+
+                document.getElementById("modelo").innerHTML = formatarString(resultado.marcaModelo);
                 document.getElementById("placa").innerHTML = resultado.placa + ' / ' + resultado.municipioEmplacamento;
                 document.getElementById("renavam").innerHTML = resultado.renavam;
                 if (resultado.proprietarioAnterior) {
@@ -732,11 +1039,10 @@
                 /// MULTAS  /////
 
 
-                var multas = data[1].data;
                 var multasContainer = document.getElementById("multas-container");
-                console.log(data);
-                if (data[1].success == true) {
-                    for (var i = 0; i < multas.length; i++) {
+
+                if (multasX.success === true && multas != null && Object.keys(multas).length >= 1) {
+                    for (var i = 0; i < Object.keys(multas).length ; i++) {
                         var resultado = multas[i];
                         var horaFormatada = resultado.horaAutuacao.slice(0, 2) + ":" + resultado.horaAutuacao.slice(2);
 
@@ -765,20 +1071,20 @@
                         // Adicione o elemento criado ao container de multas
                         multasContainer.appendChild(div);
                     }
-                }else{
-                        var div = document.createElement("div");
-                        div.classList.add("text-center");
-                        div.classList.add("mt-2");
+                } else {
+                    var div = document.createElement("div");
+                    div.classList.add("text-center");
+                    div.classList.add("mt-2");
 
-                        // Defina os atributos "style" para largura
-                        div.style.width = "300px";
-                        div.innerHTML = `
+                    // Defina os atributos "style" para largura
+                    div.style.width = "300px";
+                    div.innerHTML = `
                     <span></span>
                     <p>Sem multas disponíveis.</p>
                     <span></span>
                    
                 `;
-                multasContainer.appendChild(div);
+                    multasContainer.appendChild(div);
 
                 }
                 // Loop através do array de multas
@@ -787,13 +1093,11 @@
                 /// DEBITOS  /////
 
 
-                var debito = data[2].data;
                 var debitoContainer = document.getElementById("debito-container");
-                if (data[2].success == true) {
-
-                    // Loop através do array de debito
-                    for (var i = 0; i < debito.length; i++) {
+                if (debitoX.success === true && debito != null && Object.keys(debito).length >= 1) {
+                    for (var i = 0; i < Object.keys(debito).length ; i++) {
                         var resultado = debito[i];
+                        // console.log(resultado)
                         if (resultado.classe != null) {
                             var div = document.createElement("div");
                             div.classList.add("text-center");
@@ -818,7 +1122,35 @@
 
 
 
-                }else{
+                } else {
+                    var div = document.createElement("div");
+                    div.classList.add("text-center");
+                    div.classList.add("mt-2");
+
+                    // Defina os atributos "style" para largura
+                    div.style.width = "300px";
+                    div.innerHTML = `
+                    <span></span>
+                    <p>Sem Débitos disponíveis.</p>
+                    <span></span>
+                   
+                `;
+                    debitoContainer.appendChild(div);
+
+                }
+
+
+                /// INFRAÇÕES  /////
+
+
+                var infracaoContainer = document.getElementById("infracao-container");
+                if (infracaoX.success === true && infracao != null && Object.keys(infracao).length > 1) {
+                    for (var i = 0; i < Object.keys(infracao).length; i++) {
+
+                        var resultado = infracao[i];
+                        // console.log(resultado)
+                        var horaFormatada = resultado.horaAutuacao.slice(0, 2) + ":" + resultado.horaAutuacao.slice(2);
+
                         var div = document.createElement("div");
                         div.classList.add("text-center");
                         div.classList.add("mt-2");
@@ -826,12 +1158,37 @@
                         // Defina os atributos "style" para largura
                         div.style.width = "300px";
                         div.innerHTML = `
+                    <span>AUTO DA INFRAÇÃO:</span>
+                    <p>${resultado.descricaoAuto}</p>
+                    <span>DESCRIÇÃO DA INFRAÇÃO:</span>
+                    <p>${resultado.descricaoInfracao}</p>
+                    <span>COMPLEMENTO</span>
+                    <p>${resultado.complemento}</p>
+                    <span>LOCAL:</span>
+                    <p>${resultado.localInfracao}</p>
+                    <span>DATA E HORA:</span>
+                    <p>${resultado.dataAutuacao + ' - ' + horaFormatada}</p>
+
+                `;
+                        infracaoContainer.appendChild(div);
+                    }
+
+
+
+                } else {
+                    var div = document.createElement("div");
+                    div.classList.add("text-center");
+                    div.classList.add("mt-2");
+
+                    // Defina os atributos "style" para largura
+                    div.style.width = "300px";
+                    div.innerHTML = `
                     <span></span>
-                    <p>Sem Débitos disponíveis.</p>
+                    <p>Sem Infrações disponíveis.</p>
                     <span></span>
                    
                 `;
-                debitoContainer.appendChild(div);
+                    infracaoContainer.appendChild(div);
 
                 }
             }
@@ -839,11 +1196,14 @@
 
             function ativar_key() {
                 var csrfToken = "{{ csrf_token() }}";
+                exibirLoading();
+                inputdados = document.getElementById("dados");
 
                 if (inputdados.value.length < 7) {
                     inputdados.focus();
                     document.getElementById("aviso").innerHTML =
                         'Preencha o campo abaixo';
+                    ocultarLoading();
 
                     return;
                 }
@@ -869,14 +1229,21 @@
                     },
                     success: function(data) {
                         console.log(data);
-                        if (data == 200) {
+                        ocultarLoading();
+
+                        if (data == 202) {
+                            telas(7);
+                        } else if (data == 203) {
+                            telas(8);
+                        } else if (data == 200) {
                             ses_pesq();
                             telas(6);
+                            setTimeout(function() {
+                                location.reload();
+                            }, 10000);
 
-                        } else if (data == 202) {
-                            telas(7);
-                        } else if (data == 303) {
-                            alert.innerHTML = 'A conta já existe, faça login';
+                        } else if (data == 201) {
+                            alert.innerHTML = 'Chave já foi ativada !';
 
                         } else {
 
@@ -885,6 +1252,29 @@
                     }
                 });
             }
+
+            function updateProgress() {
+                const totalTime = 13000; // Tempo total esperado para todas as requisições (em milissegundos)
+                let elapsedTime = 0; // Tempo decorrido
+
+                function calculatePercentage() {
+                    const percentage = (elapsedTime / totalTime) * 100;
+                    document.getElementById("labelbuscando").innerHTML = 'Buscando...<br>' + percentage.toFixed(0) + '%';
+                }
+
+                // Inicia o cronômetro
+                const timer = setInterval(function() {
+                    elapsedTime += 100; // Incrementa o tempo decorrido a cada segundo
+                    calculatePercentage();
+
+                    // Se o tempo decorrido atingir o tempo total, interrompe o cronômetro
+                    if (elapsedTime >= totalTime) {
+                        clearInterval(timer);
+                    }
+                }, 100);
+            }
+
+            // Atualize a função uma vez (ou conforme necessário)
 
 
 
@@ -899,13 +1289,18 @@
 
                     return;
                 }
+                exibirLoading();
 
                 btnpesquisar.classList.add("d-none");
                 btnpesquisar2.classList.remove("d-none");
 
                 var dados = new FormData();
                 var id = @json(session('email'));
+                var xyz = document.getElementById("dados").value;
+
                 dados.append('id', id);
+                dados.append('placa', xyz);
+
                 var url = '/api/free-test';
 
                 $.ajax({
@@ -927,39 +1322,12 @@
                             ses_atv()
                             telas(2);
                             localStorage.setItem('atv_on', 1);
-
+                            ocultarLoading();
                         }
                     }
                 });
             }
 
-
-
-
-
-
-
-            function mostrarAnterior() {
-                if (indiceAtual > 0) {
-                    indiceAtual--; // Decrementa o índice
-                    exibirResultado(indiceAtual); // Exibe o resultado anterior
-                }
-            }
-
-            function mostrarProximo() {
-                if (indiceAtual < resultados.length - 1) {
-                    indiceAtual++; // Incrementa o índice
-                    exibirResultado(indiceAtual); // Exibe o próximo resultado
-                }
-            }
-
-            function exibirInfos(x) {
-                document.getElementById("local").innerHTML = x[0];
-                document.getElementById("datahora").innerHTML = x[1];
-                document.getElementById("rua").innerHTML = x[2];
-                document.getElementById("motivo").innerHTML = x[3];
-                document.getElementById("complemento").innerHTML = x[4];
-            }
 
             function novaPesquisa() {
                 location.reload();

@@ -6,7 +6,8 @@ use HeadlessChromium\Page;
 require 'vendor/autoload.php'; // Certifique-se de que o caminho para o autoload.php está correto.
 
 // Inicialize o navegador
-$browserFactory = new BrowserFactory();
+$tempDir = '/var/www/html/temp/';
+$browserFactory = new BrowserFactory('/opt/google/chrome/chrome', null, $tempDir);
 $browser = $browserFactory->createBrowser([
     'headless' => true, // Garante que seja executado como headless
 ]);
@@ -18,6 +19,7 @@ $page->navigate('https://portal.detran.rn.gov.br/#/login')->waitForNavigation();
 // Localize elementos na página
 
 $botaoLogin = $page->evaluate('document.querySelector(\'button[label="Login"]\')');
+
 
 $page->evaluate('
     const inputUsuario = document.querySelector(\'input[formcontrolname="username"]\');
@@ -44,40 +46,31 @@ if ($botaoLogin) {
     botaoLogin.click();
 ');
 
-    sleep(5);
-
-
     // Execute código JavaScript na página para acessar o localStorage e obter o id_token
 
-$evaluation = $page->evaluate('localStorage.getItem("id_token")');
-
-
-$idToken = $evaluation->getReturnValue();
-
-    if ($idToken) {
-
-        // Conexão com o banco de dados MySQL
-        $conexao = new \mysqli('localhost', 'root', '', 'detran');
-
-        if ($conexao->connect_error) {
-            die('Erro na conexão com o banco de dados: ' . $conexao->connect_error);
-        }
-
-        // Inserção do id_token no banco de dados MySQL
-        $sql = "INSERT INTO token (token) VALUES ('$idToken')";
-        if ($conexao->query($sql) === TRUE) {
-            echo 200;
-        } else {
-            echo 'Erro ao salvar o id_token no banco de dados: ' . $conexao->error;
-        }
-
-        $conexao->close();
-    } else {
-        echo 'id_token não encontrado no localStorage.';
+    function buscarIdToken($page)
+    {
+        // Execute código JavaScript na página para acessar o localStorage e obter o id_token
+        $evaluation = $page->evaluate('localStorage.getItem("id_token")');
+        $idToken = $evaluation->getReturnValue();
+        return $idToken;
     }
-} else {
-    echo 'Botão "Login" não encontrado.';
+
+    $idToken = '';
+
+    while (empty($idToken)) {
+        $idToken = buscarIdToken($page);
+        if (empty($idToken)) {
+            sleep(2); // Aguarde 2 segundos antes de tentar novamente
+        }
+    }
+    if ($idToken) {
+        echo $idToken;
+    } else {
+        echo 400; // Retornar código de erro 400 se o idToken não for encontrado
+    }
 }
+
 
 // Feche o navegador
 $browser->close();
