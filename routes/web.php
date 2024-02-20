@@ -14,8 +14,13 @@ use App\Http\Controllers\ApiController;
 |
 */
 
-Route::get('/', function () {
+Route::get('app', function () {
     return view('home');
+});
+
+
+Route::get('/', function () {
+    return view('lp');
 });
 
 Route::post('/free-test', [App\Http\Controllers\FreeTestController::class, 'index'])->name('free-test');
@@ -32,6 +37,7 @@ Route::get('/logout', [App\Http\Controllers\MemberController::class, 'logout'])-
 
 Route::get('/api/placa/{id}', [ApiController::class, 'Consulta']);
 Route::get('/api/d/{placa}', [ApiController::class, 'get_d_dados']);
+Route::get('/api/free/{placa}', [ApiController::class, 'get_free_dados']);
 
 
 Route::get('/api/token', [ApiController::class, 'api_token']);

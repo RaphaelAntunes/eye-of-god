@@ -38,13 +38,13 @@ class FreeTestController extends Controller
           'pro' => 0,
         ]);
         Cookie::queue(Cookie::make('laravel_session', Session::getId(), 60 * 24 * 365 * 10));
-        return redirect()->back()->with('message', 'Cadastrado com Sucesso');
+        return redirect('/app')->with('message', 'Cadastrado com Sucesso');
       }
 
-      return redirect()->back()->with('message', 'Erro ao cadastrar');
+      return redirect('/app')->with('message', 'Erro ao cadastrar');
     } else {
 
-      return redirect()->back()->with('message', 'Esse e-mail já está atribuido a uma conta');
+      return redirect('/app')->with('message', 'Esse e-mail já está atribuido a uma conta');
     }
   }
 
@@ -66,17 +66,15 @@ class FreeTestController extends Controller
     ]);
 
     $log->save();
-    
+
     if ($usr->pro == 1) {
       return 200;
     } else if ($usr->qtdconsultas && $usr->qtdconsultas > 2) {
-
-      return 201;
+      return 204;
     } else {
-
       $usr->qtdconsultas = $usr->qtdconsultas + 1;
       $usr->save();
-      return 200;
+      return 201;
     }
   }
 }

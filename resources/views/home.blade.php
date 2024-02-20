@@ -843,18 +843,20 @@
             document.getElementById("anterior").style.display = 'none';
             document.getElementById("proximo").style.display = 'none';
 
-            function consulta() {
-                var dados = new FormData();
+            function consulta(config) {
                 var xyz = document.getElementById("dados").value;
-                dados.append('xyz', xyz);
-                var url = '/api/d/' + encodeURIComponent(xyz);
+                if(config == 0){
+                    var url = '/api/d/' + encodeURIComponent(xyz);
+                }else{
+                    var url = '/api/free/' + encodeURIComponent(xyz);
+
+                }
                 updateProgress();
 
 
                 $.ajax({
                     url: 'api/token',
                     method: 'get',
-                    data: dados,
                     contentType: false,
                     processData: false,
                     success: function(data) {
@@ -862,7 +864,6 @@
                             $.ajax({
                                 url: url,
                                 method: 'get',
-                                data: dados,
                                 contentType: false,
                                 processData: false,
                                 success: function(data) {
@@ -1314,7 +1315,10 @@
                     },
                     success: function(data) {
                         if (data == 200) {
-                            consulta();
+                            consulta(0);
+
+                        } else if (data == 201){
+                            consulta(1);
 
                         } else {
                             $('#meuModal').modal('show');
