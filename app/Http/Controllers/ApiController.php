@@ -59,8 +59,7 @@ class ApiController extends Controller
         {
             $captoken = exec('python C:\Users\f\Desktop\a\eye-of-god\app\Http\Controllers\CapToken.py');
             // $captoken = exec('python3 /var/www/eye-of-god/app/Http/Controllers/CapToken.py');
-
-            return $captoken;
+            
             $curl = curl_init();
 
             curl_setopt_array(
