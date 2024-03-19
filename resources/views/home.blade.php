@@ -1145,7 +1145,7 @@
 
 
                 var infracaoContainer = document.getElementById("infracao-container");
-                if (infracaoX.success === true && infracao != null && Object.keys(infracao).length > 1) {
+                if (infracaoX.success === true && infracao != null && Object.keys(infracao).length >= 1) {
                     for (var i = 0; i < Object.keys(infracao).length; i++) {
 
                         var resultado = infracao[i];
