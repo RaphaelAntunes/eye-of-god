@@ -29,19 +29,19 @@ class ApiController extends Controller
         $bearer = $token->token;
         $cpfatual = null;
 
-        //Busca no banco pela placa e tras todo OBJ > to cpf $cpf->cpf
-        $cpf = ApiModel::where('placa', 'like', '%' . $placa . '%')->orderBy('cpf', 'desc')->first();
+        //Busca no banco pela placa e tras todo OBJ >    to cpf $cpf->cpf
+        // $cpf = ApiModel::where('placa', 'like', '%' . $placa . '%')->orderBy('cpf', 'desc')->first();
 
-        if ($cpf && $cpf->cpf) {
-            $urlCPF = 'https://www2.detran.rn.gov.br/SharedASP/grdMulta.asp?NossoNumero=' . $cpf->documento;
-            $html = file_get_contents($urlCPF);
-            // Usa expressão regular para encontrar o CPF/CNPJ
-            if (preg_match('/CPF\/CNPJ<BR><SPAN CLASS="cellef">([\d\.\-\/]+)<\/SPAN>/', $html, $matches)) {
-                $cpfatual = preg_replace('/[^0-9]/', '', $matches[1]);
-            } else {
-                $cpfatual = null;
-            }
-        }
+        // if ($cpf && $cpf->cpf) {
+        //     $urlCPF = 'https://www2.detran.rn.gov.br/SharedASP/grdMulta.asp?NossoNumero=' . $cpf->documento;
+        //     $html = file_get_contents($urlCPF);
+        //     // Usa expressão regular para encontrar o CPF/CNPJ
+        //     if (preg_match('/CPF\/CNPJ<BR><SPAN CLASS="cellef">([\d\.\-\/]+)<\/SPAN>/', $html, $matches)) {
+        //         $cpfatual = preg_replace('/[^0-9]/', '', $matches[1]);
+        //     } else {
+        //         $cpfatual = null;
+        //     }
+        // }
 
 
 
@@ -59,7 +59,7 @@ class ApiController extends Controller
         {
             $captoken = exec('python C:\Users\f\Desktop\a\eye-of-god\app\Http\Controllers\CapToken.py');
             // $captoken = exec('python3 /var/www/eye-of-god/app/Http/Controllers/CapToken.py');
-            
+
             $curl = curl_init();
 
             curl_setopt_array(
@@ -166,18 +166,16 @@ class ApiController extends Controller
                         $resultadoArray = array(
                             'success' => true,
                             'data' => array(
-                                
-                                'documento' =>$cpfatual,
-                           
+
+                                'documento' => $cpfatual,
+
                             )
                         );
                         $dados[] = $resultadoArray;
-
                     } else {
                         $dados[] = $resultadoPF;
                     }
                     $pegaperfil = 1;
-
                 } else {
 
                     if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
@@ -210,7 +208,6 @@ class ApiController extends Controller
                 }
                 // Verifica se a chave 'data' existe e se é um array
                 $count = $count + 1;
-
             } else {
                 $count = $count + 1;
             }
@@ -224,7 +221,7 @@ class ApiController extends Controller
             }
 
             curl_multi_remove_handle($mh, $ch);
-            curl_close($ch);
+            // curl_close($ch);
         }
 
         curl_multi_close($mh);
@@ -235,31 +232,31 @@ class ApiController extends Controller
         function censurarDadosSensíveis($data)
         {
             $censoredData = $data;
-    
+
             // Adicione aqui as chaves que você deseja censurar e a quantidade de letras a serem censuradas
-            $sensitiveKeys = array('valorNominal' => 8,'valorAtualizado' => 8,'complemento' => 8,'descricaoAuto'=> 8,'localInfracao'=> 8,'horaAutuacao'=> 8,'descricaoStatus'=> 20,'descricaoInfracao'=> 8,'cidadeInfracao'=> 8,'dataAutuacao'=> 4,'dataAquisicao'=> 4,'proprietarioAnterior' => 6,'municipioEmplacamento' => 6,'proprietarioAnteriorLocadora' => 6, 'nomeProprietario' => 6, 'renavam' => 4, 'documento' => 4, 'email' => 8, 'telefone' => 5, 'cpf' => 4);
-    
+            $sensitiveKeys = array('valorNominal' => 8, 'valorAtualizado' => 8, 'complemento' => 8, 'descricaoAuto' => 8, 'localInfracao' => 8, 'horaAutuacao' => 8, 'descricaoStatus' => 20, 'descricaoInfracao' => 8, 'cidadeInfracao' => 8, 'dataAutuacao' => 4, 'dataAquisicao' => 4, 'proprietarioAnterior' => 6, 'municipioEmplacamento' => 6, 'proprietarioAnteriorLocadora' => 6, 'nomeProprietario' => 6, 'renavam' => 4, 'documento' => 4, 'email' => 8, 'telefone' => 5, 'cpf' => 4);
+
             foreach ($censoredData as &$item) {
                 if (is_array($item)) {
                     $item = censurarDadosSensíveis($item);
                 }
             }
-    
+
             foreach ($sensitiveKeys as $key => $numLettersToCensor) {
                 if (isset($censoredData[$key])) {
                     $censoredData[$key] = censurarPalavra($censoredData[$key], $numLettersToCensor);
                 }
             }
-    
+
             return $censoredData;
         }
-    
+
         // Função para censurar uma palavra com base no número de letras a serem censuradas
         function censurarPalavra($word, $numLettersToCensor)
         {
             $wordLength = strlen($word);
             $censoredPart = str_repeat('*', $numLettersToCensor);
-    
+
             if ($numLettersToCensor < $wordLength) {
                 $uncensoredPart = substr($word, -$wordLength, $numLettersToCensor);
                 return $uncensoredPart . $censoredPart;
@@ -267,7 +264,7 @@ class ApiController extends Controller
                 return $censoredPart; // Censura completa se $numLettersToCensor for maior ou igual ao comprimento da palavra
             }
         }
-    
+
 
         // Aplica a função aos dados sensíveis
         $dadossensurados = censurarDadosSensíveis($dadossensurados);
@@ -277,24 +274,27 @@ class ApiController extends Controller
     }
     public function get_d_dados($placa)
     {
+        set_time_limit(90);
+
         $dados = array();
         $token = TokenModel::orderBy('id', 'desc')->first();
         $bearer = $token->token;
         $cpfatual = null;
 
-        //Busca no banco pela placa e tras todo OBJ > to cpf $cpf->cpf
-        $cpf = ApiModel::where('placa', 'like', '%' . $placa . '%')->orderBy('cpf', 'desc')->first();
+        // $cpf = ApiModel::where('placa', 'like', '%' . $placa . '%')->orderBy('cpf', 'desc')->first();
 
-        if ($cpf && $cpf->cpf) {
-            $urlCPF = 'https://www2.detran.rn.gov.br/SharedASP/grdMulta.asp?NossoNumero=' . $cpf->documento;
-            $html = file_get_contents($urlCPF);
-            // Usa expressão regular para encontrar o CPF/CNPJ
-            if (preg_match('/CPF\/CNPJ<BR><SPAN CLASS="cellef">([\d\.\-\/]+)<\/SPAN>/', $html, $matches)) {
-                $cpfatual = preg_replace('/[^0-9]/', '', $matches[1]);
-            } else {
-                $cpfatual = null;
-            }
-        }
+        // if ($cpf && $cpf->cpf) {
+        //     $urlCPF = 'https://www2.detran.rn.gov.br/SharedASP/grdMulta.asp?NossoNumero=' . $cpf->documento;
+        //     $html = file_get_contents($urlCPF);
+        //     // Usa expressão regular para encontrar o CPF/CNPJ
+        //     if (preg_match('/CPF\/CNPJ<BR><SPAN CLASS="cellef">([\d\.\-\/]+)<\/SPAN>/', $html, $matches)) {
+        //         $cpfatual = preg_replace('/[^0-9]/', '', $matches[1]);
+        //     } else {
+        //         $cpfatual = null;
+        //     }
+        // }
+
+
 
 
 
@@ -412,58 +412,38 @@ class ApiController extends Controller
 
             if ($count == 2) {
 
-                if ($cpfatual && $pegaperfil == 0) {
-                    $cpfSemPontos = preg_replace('/\D/', '', $cpfatual);
-                    $resultadoPF = json_decode(get_profile_dados($cpfSemPontos), true);
-                    if (isset($resultadoPF['data']) && in_array("Usuário não localizado", $resultadoPF['data'])) {
-                        $resultadoArray = array(
-                            'success' => true,
-                            'data' => array(
-                                
-                                'documento' =>$cpfatual,
-                           
-                            )
-                        );
-                        $dados[] = $resultadoArray;
+                if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
+                    // Pega o primeiro elemento do array 'data'
+                    $firstData = reset($decodedResponse['data']);
+                    // Verifica se a chave 'idDebito' existe dentro do primeiro elemento
+                    if (isset($firstData['idDebito'])) {
+                        // Obtém e imprime o idDebito
+                        $idDebito = $firstData['idDebito'];
+                        $classe = $firstData['classe'];
 
-                    } else {
-                        $dados[] = $resultadoPF;
-                    }
-                    $pegaperfil = 1;
+                        $urlCPF = 'https://pix.detran.rn.gov.br/?idDebito=' . $idDebito . '&Tipo=V&Classe=' . $classe . '';
+                        $html = file_get_contents($urlCPF);
 
-                } else {
-
-                    if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
-                        // Pega o primeiro elemento do array 'data'
-                        $firstData = reset($decodedResponse['data']);
-                        // Verifica se a chave 'idDebito' existe dentro do primeiro elemento
-                        if (isset($firstData['idDebito'])) {
-                            // Obtém e imprime o idDebito
-                            $idDebito = $firstData['idDebito'];
-                            $classe = $firstData['classe'];
-
-                            $urlCPF = 'https://pix.detran.rn.gov.br/?idDebito=' . $idDebito . '&Tipo=V&Classe=' . $classe . '';
-                            $html = file_get_contents($urlCPF);
-
-                            // Verifica se o conteúdo foi obtido com sucesso
-                            if ($html !== false) {
-                                // Usa expressão regular para encontrar o CPF
-                                if (preg_match('/<p><b>CPF:<\/b>\s*(\d{11})<\/p>/', $html, $matches)) {
-                                    $decodedResponse[0]['cpf'] = $matches[1];
-                                    $cpfSemPontos = preg_replace('/\D/', '', $matches[1]);
-                                    $resultadoPF = json_decode(get_profile_dados($cpfSemPontos), true);
-                                    $pegaperfil = 1;
-                                    $dados[] = $resultadoPF;
-                                } else {
-                                    $decodedResponse['data']['cpf'] = null;
-                                }
+                        // Verifica se o conteúdo foi obtido com sucesso
+                        if ($html !== false) {
+                            // Usa expressão regular para encontrar o CPF
+                            if (preg_match('/<p><b>CPF:<\/b>\s*(\d{11})<\/p>/', $html, $matches)) {
+                                $decodedResponse['cpf'] = $matches[1];
+                                $cpfSemPontos = preg_replace('/\D/', '', $matches[1]);
+                                $resultadoPF = json_decode(get_profile_dados($cpfSemPontos), true);
+                                $pegaperfil = 1;
+                                $dados[] = $resultadoPF;
+                            } else {
+                                $decodedResponse['data']['cpf'] = null;
                             }
                         }
+
+                        // Fecha a sessão cURL
+                        // curl_close($curl);
                     }
                 }
                 // Verifica se a chave 'data' existe e se é um array
                 $count = $count + 1;
-
             } else {
                 $count = $count + 1;
             }
@@ -483,12 +463,10 @@ class ApiController extends Controller
         curl_multi_close($mh);
 
         return $dados;
-
-       
     }
 
-        
-    
+
+
 
 
 

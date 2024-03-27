@@ -32,11 +32,13 @@
         <nav class="navbar navbar-light justify-content-between bg-black d-flex" style="width:100%;">
             <div class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
                 @php
-                    if (session('pro') == 0) {
-                        echo '<p id="top-ser-vip" class="justify-content-center align-items-center"  onclick="telas(2)">Busque sem limites, tenha o controle em suas mãos
-                    <span style="color: gold; ">Seja VIP</span> <img style="margin-bottom: -7px;" src="img/coroa.png" alt="">
+                if (session('pro') == 0) {
+                echo '<p id="top-ser-vip" class="justify-content-center align-items-center" onclick="telas(2)">Busque
+                    sem limites, tenha o controle em suas mãos
+                    <span style="color: gold; ">Seja VIP</span> <img style="margin-bottom: -7px;" src="img/coroa.png"
+                        alt="">
                 </p>';
-                    }
+                }
                 @endphp
 
 
@@ -44,54 +46,48 @@
 
                 @php
 
-                    if (session('pro') == 1) {
-                        echo '<div class="d-flex container justify-content-between align-items-center">';
-                        echo '<p ><span style="color: gold; ">Você é VIP</span> <img
-                        style="margin-bottom: -7px;" src="img/coroa.png" alt=""> </p>';
-                        echo "<a href='" . route('logout') . "'><p>Sair</p></a>";
-                        echo '</div>';
-                    }
-                @endphp
-            </div>
+                if (session('pro') == 1) {
+                echo '<div class="d-flex container justify-content-between align-items-center">';
+                    echo '<p><span style="color: gold; ">Você é VIP</span> <img style="margin-bottom: -7px;"
+                            src="img/coroa.png" alt=""> </p>';
+                    echo "<a href='" . route(' logout') . "'><p>Sair</p></a>" ; echo '</div>' ; } @endphp </div>
 
 
         </nav>
         @if ($errors->has('message'))
-            <nav class="navbar navbar-light justify-content-center bg-black d-flex"
-                style="width:100%; background-color: red; ">
-                <div
-                    class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
+        <nav class="navbar navbar-light justify-content-center bg-black d-flex"
+            style="width:100%; background-color: red; ">
+            <div class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
 
-                    <p style="color: white;font-weight:bold;">🚨{{ $errors->first('message') }}🚨</p>
-                </div>
+                <p style="color: white;font-weight:bold;">🚨{{ $errors->first('message') }}🚨</p>
+            </div>
 
 
-            </nav>
+        </nav>
         @endif
 
         @if (session('message'))
-            <nav class="navbar navbar-light justify-content-center bg-black d-flex"
-                style="width:100%; background-color: red; ">
-                <div
-                    class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
+        <nav class="navbar navbar-light justify-content-center bg-black d-flex"
+            style="width:100%; background-color: red; ">
+            <div class="d-flex container flex-row align-items-center justify-content-center text-center color-white">
 
-                    <p style="color: white;font-weight:bold;">🚨 {{ session('message') }} 🚨</p>
-                </div>
+                <p style="color: white;font-weight:bold;">🚨 {{ session('message') }} 🚨</p>
+            </div>
 
 
-            </nav>
+        </nav>
         @endif
 
 
         @php
-            if (!session('nome')) {
-                echo '<div class="d-flex">
+        if (!session('nome')) {
+        echo '<div class="d-flex">
             <button onclick="login()" class="mt-3 freetest mr-4">
                 Entrar</button>
             <button onclick="telas(5)" class="mt-3 freetest">Experimente<br>
                 Grátis</button>
         </div>';
-            }
+        }
         @endphp
 
 
@@ -100,8 +96,8 @@
         </div>
 
         @php
-            if (!session('nome')) {
-                echo '<div id="ativarvip">
+        if (!session('nome')) {
+        echo '<div id="ativarvip">
             <div class="d-flex flex-column text-center justify-content-center align-items-center">
                 <p style="padding: 10px; color: white;" id="aviso">Consulte informações <span
                         style="color: gold">VIP</span> sobre um veículo</p>
@@ -110,26 +106,28 @@
 
             </div>
         </div>';
-            }
+        }
         @endphp
 
 
 
         @php
-            if (session('nome')) {
-                echo '<div id="pesquisa">
-                <div class="d-flex flex-column text-center justify-content-center align-items-center">
-                    <p style="padding: 10px; color: red;" id="aviso"></p>
-                    <input type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo">
-                    <button id="btnpesquisar3" onclick="novaPesquisa()">Nova Pesquisa</button>
-                    <button id="btnpesquisar2" class="d-none" style="background-color: gray; color: #c3c3c3; cursor:not-allowed" >Pesquisar</button>
-                    <button id="btnpesquisar" onclick="autorizador()">Pesquisar</button>
-                    <button id="btnativar"class="d-none" onclick="ativar_key()">Ativar</button>
-                    <button id="btnativar2" class="d-none" style="background-color: gray; color: #c3c3c3; cursor:not-allowed" >Ativar</button>
+        if (session('nome')) {
+        echo '<div id="pesquisa">
+            <div class="d-flex flex-column text-center justify-content-center align-items-center">
+                <p style="padding: 10px; color: red;" id="aviso"></p>
+                <input type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo">
+                <button id="btnpesquisar3" onclick="novaPesquisa()">Nova Pesquisa</button>
+                <button id="btnpesquisar2" class="d-none"
+                    style="background-color: gray; color: #c3c3c3; cursor:not-allowed">Pesquisar</button>
+                <button id="btnpesquisar" onclick="autorizador()">Pesquisar</button>
+                <button id="btnativar" class="d-none" onclick="ativar_key()">Ativar</button>
+                <button id="btnativar2" class="d-none"
+                    style="background-color: gray; color: #c3c3c3; cursor:not-allowed">Ativar</button>
 
-                </div>
-            </div>';
-            }
+            </div>
+        </div>';
+        }
         @endphp
         <div id="showpesquisa" style="background: black; display: none !important;">
             <div class="showpesquisa d-flex flex-column justify-content-center align-items-center">
@@ -143,10 +141,9 @@
                 border-radius: 0.25rem;
                 display: none;
             }">
-                    
+
                 </div>
-                <button id="btncrlv"
-                    style="line-height: 15px;
+                <button id="btncrlv" style="line-height: 15px;
                 cursor:pointer;
                 width: 102px;
                 height: 56px;
@@ -169,7 +166,7 @@
                             <div class="d-flex flex-column flex-lg-row" style="align-items: self-start;">
                                 <div style="width: 300px"
                                     class="text-center d-flex flex-column justify-content-center align-items-center">
-                            
+
                                     <span>PROPRIETÁRIO:</span>
                                     <p id="nome"></p>
                                     <span>CPF:</span>
@@ -198,18 +195,18 @@
                     <div class="card">
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
-                                <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseVeiculo"
-                                    aria-expanded="true" aria-controls="collapseVeiculo">
+                                <button class="btn btn-link btn-open" data-toggle="collapse"
+                                    data-target="#collapseVeiculo" aria-expanded="true" aria-controls="collapseVeiculo">
                                     Dados Veiculo </button>
                             </h5>
                         </div>
 
-                        <div id="collapseVeiculo" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="d-flex flex-column flex-lg-row"
-                                style="align-items: self-start;">
+                        <div id="collapseVeiculo" class="collapse " aria-labelledby="headingOne"
+                            data-parent="#accordion">
+                            <div class="d-flex flex-column flex-lg-row" style="align-items: self-start;">
                                 <div style="width: 300px"
                                     class="text-center d-flex flex-column justify-content-center align-items-center">
-                            
+
                                     <span>MODELO:</span>
                                     <p id="modelo"></p>
                                     <span>COR:</span>
@@ -270,8 +267,7 @@
                             </h5>
                         </div>
 
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingOne"
-                            data-parent="#accordion">
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="d-flex flex-column flex-lg-row" id="multas-container"
                                 style="align-items: self-start;">
 
@@ -291,8 +287,7 @@
                             </h5>
                         </div>
 
-                        <div id="collapseThree" class="collapse " aria-labelledby="headingOne"
-                            data-parent="#accordion">
+                        <div id="collapseThree" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="d-flex flex-column flex-lg-row" id="debito-container"
                                 style="align-items: self-start;">
 
@@ -306,8 +301,7 @@
 
 
                     <div class="d-flex justify-content-between mt-5">
-                        <button class="controladores mr-3" id="anterior"
-                            onclick="mostrarAnterior()">Anterior</button>
+                        <button class="controladores mr-3" id="anterior" onclick="mostrarAnterior()">Anterior</button>
                         <button class="controladores" id="proximo" onclick="mostrarProximo()">Próximo</button>
                     </div>
                     <button id="novaPesquisa" onclick="novaPesquisa()" class="mt-3 mb-3">Nova pesquisa</button>
@@ -316,8 +310,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content" id="part1modal">
                     <div class="modal-header">
@@ -365,11 +358,10 @@
                             <div class="d-flex flex-column">
                                 <input type="text" name="nome" minlength="3" class="inputtest mt-2"
                                     placeholder="Digite seu nome" required>
-                                <input type="email" name="email" class="inputtest mt-2"
-                                    placeholder="Digite seu e-mail" required>
-                                <input type="text" id="whatsapp" name="telefone" maxlength="15"
-                                    class="inputtest mt-2" onkeyup="mascaraWhatsApp(this.value)"
-                                    placeholder="WhatsApp" required>
+                                <input type="email" name="email" class="inputtest mt-2" placeholder="Digite seu e-mail"
+                                    required>
+                                <input type="text" id="whatsapp" name="telefone" maxlength="15" class="inputtest mt-2"
+                                    onkeyup="mascaraWhatsApp(this.value)" placeholder="WhatsApp" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -401,18 +393,17 @@
                         </h5>
                     </div>
                     @if (session('mensagem'))
-                        <div class="alert alert-success">
-                            {{ session('mensagem') }}
-                        </div>
+                    <div class="alert alert-success">
+                        {{ session('mensagem') }}
+                    </div>
                     @endif
                     <form method="post" action="{{ route('login') }}">
                         @csrf
                         <div class="modal-body">
                             <div class="d-flex flex-column">
-                                <input type="email" name="email" class="inputtest mt-2"
-                                    placeholder="Digite seu email" required>
-                                <input type="password" name="senha" class="inputtest mt-2" placeholder="Senha"
+                                <input type="email" name="email" class="inputtest mt-2" placeholder="Digite seu email"
                                     required>
+                                <input type="password" name="senha" class="inputtest mt-2" placeholder="Senha" required>
 
                             </div>
                         </div>
@@ -428,21 +419,20 @@
                         <h5 class="modal-title" style="font-weight: bold;" id="exampleModalLabel">Cadastre-se</h5>
                     </div>
                     @if (session('mensagem'))
-                        <div class="alert alert-success">
-                            {{ session('mensagem') }}
-                        </div>
+                    <div class="alert alert-success">
+                        {{ session('mensagem') }}
+                    </div>
                     @endif
                     <form method="post" action="{{ route('cadastro') }}">
                         @csrf
                         <div class="modal-body">
                             <div class="d-flex flex-column">
-                                <input type="text" name="nome" class="inputtest mt-2"
-                                    placeholder="Digite seu nome" required>
-                                <input type="email" name="email" class="inputtest mt-2"
-                                    placeholder="Digite seu email" required>
-                                <input type="text" id="whatsapp2" name="whatsapp" class="inputtest mt-2"
-                                    maxlength="15" placeholder="Whatsapp" required
-                                    onkeyup="mascaraWhatsApp(this.value)">
+                                <input type="text" name="nome" class="inputtest mt-2" placeholder="Digite seu nome"
+                                    required>
+                                <input type="email" name="email" class="inputtest mt-2" placeholder="Digite seu email"
+                                    required>
+                                <input type="text" id="whatsapp2" name="whatsapp" class="inputtest mt-2" maxlength="15"
+                                    placeholder="Whatsapp" required onkeyup="mascaraWhatsApp(this.value)">
                                 <input type="text" id="cadsenha" name="senha" class="inputtest mt-2"
                                     oninput="vsenhacad()" placeholder="Senha" required>
                                 <input type="text" id="cadsenha2" name="senha2" class="inputtest mt-2"
@@ -462,9 +452,9 @@
                             para sua conta</h5>
                     </div>
                     @if (session('mensagem'))
-                        <div class="alert alert-success">
-                            {{ session('mensagem') }}
-                        </div>
+                    <div class="alert alert-success">
+                        {{ session('mensagem') }}
+                    </div>
                     @endif
                     <form method="post" action="/cadastro-senha">
                         @csrf
@@ -496,8 +486,7 @@
                     color: white;
                     border-radius: 17px;
                     cursor: pointer;
-                "
-                            onclick="telas(3)">
+                " onclick="telas(3)">
                             Inserir Chave
 
                     </div>
@@ -518,16 +507,14 @@
                         </p>
                     </div>
                     <div class="modal-body d-flex flex-column justify-content-center align-items-center">
-                        <div
-                            style="
+                        <div style="
                     position: relative;
                     top: -51px;
                     left: 31px;
                     height:155px;
                 ">
                             <div>
-                                <p
-                                    style="
+                                <p style="
                         position: relative;
                         left: 34px;
                         top: 74px;
@@ -538,8 +525,7 @@
                                     de: </p>
                                 <img style="margin-bottom: -7px;width: 55px;position: relative;top: 43px;left: -25px;"
                                     src="img/coroa.png" alt="">
-                                <p
-                                    style="
+                                <p style="
                         top: 3px;
                         font-size: 23px;
                         text-decoration: line-through;
@@ -556,24 +542,21 @@
 
                             </div>
                             <div>
-                                <p
-                                    style="
+                                <p style="
                         position: relative;
                         left: 27px;
                         top: 1px;
                         font-weight: bold;
                     ">
                                     por apenas: </p>
-                                <p
-                                    style="
+                                <p style="
                         font-size: 44px;
                         font-weight: bold;
                         color: #00a86b;
 
                     ">
                                     49,99</p>
-                                <p
-                                    style="
+                                <p style="
                                 top: 5px;
                                 position: relative;
                                 left: -33px;
@@ -957,26 +940,29 @@
                     var debitoX = data[3];
                     var infracaoX = data[4];
                 }
+                            
 
-                
+            if (typeof debitoX !== 'undefined' && debitoX.cpf !== 'undefined') {
 
+                document.getElementById("cpf").innerHTML = debitoX.cpf;
                 var btncrlv = document.getElementById('btncrlv');
+                var cpfLimpo = debitoX.cpf.replace(/\D/g, '');
+                var linkcrlv = 'https://crlvdigital.detran.rn.gov.br/Home/ImprimirCRLV?placa=' + resultado.placa +
+                    '&renavam=' +
+                    resultado.renavam + '&documentoProprietario=' + cpfLimpo;
 
-                if (complemento && complemento.documento) {
-                    var cpfLimpo = complemento.documento.replace(/\D/g, '');
+                //console.log(linkcrlv);
 
-                    var linkcrlv = 'https://crlvdigital.detran.rn.gov.br/Home/ImprimirCRLV?placa=' + resultado.placa +
-                        '&renavam=' +
-                        resultado.renavam + '&documentoProprietario=' + cpfLimpo;
+                btncrlv.addEventListener('click', function() {
+                    window.open(linkcrlv, '_blank');
+                });
+        
 
-                    //console.log(linkcrlv);
+            }
 
-                    btncrlv.addEventListener('click', function() {
-                        window.open(linkcrlv, '_blank');
-                    });
-                } else{
-                    btncrlv.remove();
-                }
+                        
+
+                            
 
 
 
@@ -1010,13 +996,7 @@
                     document.getElementById("card-roubo").style.display = 'block';
                     document.getElementById("card-roubo").innerHTML = 'Veículo com restrição';
                 }
-                if (complemento && complemento.documento) {
-                    document.getElementById("cpf").innerHTML = complemento.documento;
-
-                } else {
-                    document.getElementById("cpf").innerHTML = 'Não localizado';
-
-                }
+                
                 if (Object.keys(data).length == 5 && complementoX.success === true && Object.keys(complemento).length > 1) {
                     document.getElementById("divcomp").style.display = 'block';
                     document.getElementById("telefone").innerHTML = complemento.telefone;
