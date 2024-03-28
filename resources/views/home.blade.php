@@ -50,7 +50,7 @@
                 echo '<div class="d-flex container justify-content-between align-items-center">';
                     echo '<p><span style="color: gold; ">Você é VIP</span> <img style="margin-bottom: -7px;"
                             src="img/coroa.png" alt=""> </p>';
-                    echo "<a href='" . route(' logout') . "'><p>Sair</p></a>" ; echo '</div>' ; } @endphp </div>
+                    echo "<a href='" . route('logout') . "'><p>Sair</p></a>" ; echo '</div>' ; } @endphp </div>
 
 
         </nav>
@@ -101,6 +101,8 @@
             <div class="d-flex flex-column text-center justify-content-center align-items-center">
                 <p style="padding: 10px; color: white;" id="aviso">Consulte informações <span
                         style="color: gold">VIP</span> sobre um veículo</p>
+                <div>
+                    </div>
                 <input type="text" id="dados" maxlength="7" class="mb-4" value="" placeholder="Chave de ativação">
                 <button onclick="ativar_key()">Ativar</button>
 
@@ -116,7 +118,7 @@
         echo '<div id="pesquisa">
             <div class="d-flex flex-column text-center justify-content-center align-items-center">
                 <p style="padding: 10px; color: red;" id="aviso"></p>
-                <input type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo">
+                <div class="d-flex justify-content-center align-items-center "><input  style="border-radius:15px 0px 0px 15px ;" type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo"><div onclick="clearinput();" id="clearbtn" style="border-radius:0px 15px 15px 0px; background:#00A86B; width:30px; height:67px; display:flex;align-items:center; justify-content:center; cursor:pointer" class="mb-4"><p style="color:white; font-size:25px;"class="align-items-center">X</p></div></div>
                 <button id="btnpesquisar3" onclick="novaPesquisa()">Nova Pesquisa</button>
                 <button id="btnpesquisar2" class="d-none"
                     style="background-color: gray; color: #c3c3c3; cursor:not-allowed">Pesquisar</button>
@@ -1314,8 +1316,42 @@
 
 
             function novaPesquisa() {
-                location.reload();
+                var pesquisa = document.getElementById("dados").value;
+
+// Verifica se o valor obtido não é vazio
+if (pesquisa.trim() !== '') {
+    // Define o valor obtido no localStorage com a chave 'ultimaplaca'
+    localStorage.setItem('ultimaplaca', pesquisa);
+    location.reload();
+
+}     
             }
+
+            function verificarLocalStorage() {
+    // Verifica se o item 'ultimaplaca' está definido no localStorage
+    var ultimaPlaca = localStorage.getItem('ultimaplaca');
+    if (ultimaPlaca !== null) {
+        document.getElementById("dados").value = ultimaPlaca;
+    } else {
+        console.log("O item 'ultimaplaca' não está definido no localStorage.");
+    }
+}
+
+function clearinput(){
+    document.getElementById("dados").value = '';
+    localStorage.setItem('ultimaplaca', '');
+
+}
+   
+
+// Chama a função verificarLocalStorage quando a página é carregada
+window.onload = function() {
+    verificarLocalStorage();
+};
+
+         
+
+         
         </script>
         <!-- Inclua o jQuery uma única vez -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
