@@ -102,7 +102,7 @@
                 <p style="padding: 10px; color: white;" id="aviso">Consulte informações <span
                         style="color: gold">VIP</span> sobre um veículo</p>
                 <div>
-                    </div>
+                </div>
                 <input type="text" id="dados" maxlength="7" class="mb-4" value="" placeholder="Chave de ativação">
                 <button onclick="ativar_key()">Ativar</button>
 
@@ -118,7 +118,15 @@
         echo '<div id="pesquisa">
             <div class="d-flex flex-column text-center justify-content-center align-items-center">
                 <p style="padding: 10px; color: red;" id="aviso"></p>
-                <div class="d-flex justify-content-center align-items-center "><input  style="border-radius:15px 0px 0px 15px ;" type="text" maxlength="7" id="dados" class="mb-4" value="" placeholder="Placa do Veículo"><div onclick="clearinput();" id="clearbtn" style="border-radius:0px 15px 15px 0px; background:#00A86B; width:30px; height:67px; display:flex;align-items:center; justify-content:center; cursor:pointer" class="mb-4"><p style="color:white; font-size:25px;"class="align-items-center">X</p></div></div>
+                <div class="d-flex justify-content-center align-items-center "><input
+                        style="border-radius:15px 0px 0px 15px ;" type="text" maxlength="7" id="dados" class="mb-4"
+                        value="" placeholder="Placa do Veículo">
+                    <div onclick="clearinput();" id="clearbtn"
+                        style="border-radius:0px 15px 15px 0px; background:#00A86B; width:30px; height:67px; display:flex;align-items:center; justify-content:center; cursor:pointer"
+                        class="mb-4">
+                        <p style="color:white; font-size:25px;" class="align-items-center">X</p>
+                    </div>
+                </div>
                 <button id="btnpesquisar3" onclick="novaPesquisa()">Nova Pesquisa</button>
                 <button id="btnpesquisar2" class="d-none"
                     style="background-color: gray; color: #c3c3c3; cursor:not-allowed">Pesquisar</button>
@@ -153,7 +161,18 @@
                 background:#f44336;">BAIXAR
                     - CRLV</button>
                 <div id="accordion">
+                    <div id="alertboxinfo" style="display: none !important; max-width:367px;" class="alert alert-primary d-flex justify-content-center align-items-center " role="alert">
+                        <div class="mr-3"><img width="27px" src="https://i.ibb.co/RNQ8Jh0/icons8-info-52-2.png" alt=""></div>
+                        <div> Veículos que não são do RN tem informações LIMITADAS<br><br>O Veículo que pesquisou pertence a
+                            UF de <pl id="insertUF" style="
+                            font-weight: bold;
+                            color: #00A86B;
+                            text-decoration: underline;"></pl>
+                        </div>
+                        
+                    </div>
                     <div class="card">
+
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseOne"
@@ -166,6 +185,7 @@
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
                             data-parent="#accordion">
                             <div class="d-flex flex-column flex-lg-row" style="align-items: self-start;">
+
                                 <div style="width: 300px"
                                     class="text-center d-flex flex-column justify-content-center align-items-center">
 
@@ -181,8 +201,11 @@
                                         <span>Data de Nascimento:</span>
                                         <p id="datanascimento"></p>
                                     </div>
-                                    <span>DATA AQUISIÇÃO:</span>
-                                    <p id="dataaquisicao"></p>
+                                    <div id="data-aquisicao" style="width: 100%;">
+
+                                        <span>DATA AQUISIÇÃO:</span>
+                                        <p id="dataaquisicao"></p>
+                                    </div>
                                 </div>
 
 
@@ -231,8 +254,10 @@
                                     <p id="renavam"></p>
                                     <span>EMPLACAMENTO EM:</span>
                                     <p id="emplacamentoem"></p>
-                                    <span>PROPRIETÁRIO ANTERIOR:</span>
-                                    <p id="proprietario-anterior"></p>
+                                    <div id="prop-anterior" style="width: 100%;">
+                                        <span>PROPRIETÁRIO ANTERIOR:</span>
+                                        <p id="proprietario-anterior"></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -240,7 +265,7 @@
 
 
                     </div>
-                    <div class="card">
+                    <div class="card divs-info-car">
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseFor"
@@ -259,7 +284,7 @@
 
 
                     </div>
-                    <div class="card">
+                    <div class="card divs-info-car">
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link btn-open" data-toggle="collapse" data-target="#collapseTwo"
@@ -279,7 +304,7 @@
 
 
                     </div>
-                    <div class="card">
+                    <div class="card divs-info-car">
                         <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link btn-open" data-toggle="collapse"
@@ -299,7 +324,6 @@
 
 
                     </div>
-
 
 
                     <div class="d-flex justify-content-between mt-5">
@@ -853,6 +877,8 @@
                                 processData: false,
                                 success: function(data) {
                                     console.log(data);
+                                    console.log(data[0].data.classe);
+
                                     if (Object.keys(data).length == 0) {
                                         alert.innerHTML =
                                             'Placa incorreta ou veículo não pertencente ao RN';
@@ -865,7 +891,11 @@
                                     if (data[1].success) {
                                         exibirResultado(data);
 
-                                    } else if (data[1].data[0] ==
+                                    } else if (data[0].data.classe == 'rev-outrauf') {
+                                        exibirResultadoOutraUF(data[0].data);
+                                        return;
+
+                                    }else if (data[1].data[0] ==
                                         'Placa Não Cadastrada na Base Local' || data == null) {
                                         alert.innerHTML =
                                             'Placa incorreta ou veículo não pertencente ao RN';
@@ -918,6 +948,47 @@
                 return strFormatada;
             }
 
+
+            function exibirResultadoOutraUF(data) {
+                ocultarLoading();
+                var resultado = data;
+                var btncrlv = document.getElementById('btncrlv');
+                var divs_info_car = document.getElementsByClassName('divs-info-car');
+                var data_aquisicao = document.getElementById('data-aquisicao');    
+                var prop_anterior = document.getElementById('prop-anterior');    
+                var alertboxinfo = document.getElementById('alertboxinfo');    
+
+                alertboxinfo.style.display = 'flex';
+                data_aquisicao.remove();
+                prop_anterior.remove();
+                btncrlv.remove();
+
+                for (var i = 0; i < divs_info_car.length; i++) {
+    // Adiciona a classe 'd-none' a cada elemento
+    divs_info_car[i].classList.add('d-none');
+}
+                document.getElementById("cpf").innerHTML = 'Não Disponivel';
+                document.getElementById("aviso").innerHTML = '';
+                document.getElementById("pesquisa").style.display = 'none';
+                document.getElementById("showpesquisa").style.display = 'flex';
+                document.getElementById("nome").innerHTML = resultado.nomeProprietario;
+                document.getElementById("cor").innerHTML = formatarString(resultado.cor);
+                if(resultado.potencia != 0){
+                    document.getElementById("divpotencia").style.display = 'block';
+                    document.getElementById("potencia").innerHTML = resultado.potencia;
+
+                }
+                document.getElementById("insertUF").innerHTML = resultado.municipioEmplacamento;
+
+                document.getElementById("fabmodelo").innerHTML = resultado.anoFabricacaoModelo;
+                document.getElementById("combustivel").innerHTML = formatarString(resultado.combustivel);
+                document.getElementById("lugares").innerHTML = resultado.lugares;
+                document.getElementById("emplacamentoem").innerHTML = resultado.municipioEmplacamento;
+                document.getElementById("placaanterior").innerHTML = resultado.placaAnterior;
+                document.getElementById("modelo").innerHTML = formatarString(resultado.marcaModelo);
+                document.getElementById("placa").innerHTML = resultado.placa + ' / ' + resultado.municipioEmplacamento;
+                document.getElementById("renavam").innerHTML = resultado.renavam;
+            }
             function exibirResultado(data) {
                 ocultarLoading();
                 console.log(data.length);
@@ -944,23 +1015,28 @@
                 }
                             
 
-            if (typeof debitoX !== 'undefined' && debitoX.cpf !== 'undefined') {
+                if (typeof debitoX !== 'undefined' && typeof debitoX.cpf !== 'undefined') {
 
-                document.getElementById("cpf").innerHTML = debitoX.cpf;
-                var btncrlv = document.getElementById('btncrlv');
-                var cpfLimpo = debitoX.cpf.replace(/\D/g, '');
-                var linkcrlv = 'https://crlvdigital.detran.rn.gov.br/Home/ImprimirCRLV?placa=' + resultado.placa +
-                    '&renavam=' +
-                    resultado.renavam + '&documentoProprietario=' + cpfLimpo;
+document.getElementById("cpf").innerHTML = debitoX.cpf;
+var btncrlv = document.getElementById('btncrlv');
+var cpfLimpo = debitoX.cpf.replace(/\D/g, '');
+var linkcrlv = 'https://crlvdigital.detran.rn.gov.br/Home/ImprimirCRLV?placa=' + resultado.placa +
+    '&renavam=' +
+    resultado.renavam + '&documentoProprietario=' + cpfLimpo;
 
-                //console.log(linkcrlv);
+//console.log(linkcrlv);
 
-                btncrlv.addEventListener('click', function() {
-                    window.open(linkcrlv, '_blank');
-                });
-        
+btncrlv.addEventListener('click', function() {
+    window.open(linkcrlv, '_blank');
+});
 
-            }
+}else{
+    var btncrlv = document.getElementById('btncrlv');
+
+    document.getElementById("cpf").innerHTML = 'Não Disponivel';
+    btncrlv.remove();
+}
+
 
                         
 
