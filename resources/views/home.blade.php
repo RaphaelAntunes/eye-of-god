@@ -1298,9 +1298,11 @@
                     success: function(data) {
                         if (data == 200) {
                             consulta(0);
+                            localStorage.setItem('ultimaplaca', document.getElementById("dados").value);
 
                         } else if (data == 201){
                             consulta(1);
+                            localStorage.setItem('ultimaplaca', document.getElementById("dados").value);
 
                         } else {
                             $('#meuModal').modal('show');
