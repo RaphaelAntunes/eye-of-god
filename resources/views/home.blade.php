@@ -161,15 +161,18 @@
                 background:#f44336;">BAIXAR
                     - CRLV</button>
                 <div id="accordion">
-                    <div id="alertboxinfo" style="display: none !important; max-width:367px;" class="alert alert-primary d-flex justify-content-center align-items-center " role="alert">
-                        <div class="mr-3"><img width="27px" src="https://i.ibb.co/RNQ8Jh0/icons8-info-52-2.png" alt=""></div>
-                        <div> Veículos que não são do RN tem informações LIMITADAS<br><br>O Veículo que pesquisou pertence a
+                    <div id="alertboxinfo" style="display: none !important; max-width:367px;"
+                        class="alert alert-primary d-flex justify-content-center align-items-center " role="alert">
+                        <div class="mr-3"><img width="27px" src="https://i.ibb.co/RNQ8Jh0/icons8-info-52-2.png" alt="">
+                        </div>
+                        <div> Veículos que não são do RN tem informações LIMITADAS<br><br>O Veículo que pesquisou
+                            pertence a
                             UF de <pl id="insertUF" style="
                             font-weight: bold;
                             color: #00A86B;
                             text-decoration: underline;"></pl>
                         </div>
-                        
+
                     </div>
                     <div class="card">
 
@@ -275,7 +278,7 @@
                         </div>
 
                         <div id="collapseFor" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="d-flex flex-column flex-lg-row" id="infracao-container"
+                            <div class="d-flex flex-column " id="infracao-container"
                                 style="align-items: self-start;">
 
                             </div>
@@ -295,7 +298,7 @@
                         </div>
 
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="d-flex flex-column flex-lg-row" id="multas-container"
+                            <div class="d-flex flex-column " id="multas-container"
                                 style="align-items: self-start;">
 
                             </div>
@@ -315,7 +318,7 @@
                         </div>
 
                         <div id="collapseThree" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="d-flex flex-column flex-lg-row" id="debito-container"
+                            <div class="d-flex flex-column " id="debito-container"
                                 style="align-items: self-start;">
 
                             </div>
@@ -1095,69 +1098,23 @@ btncrlv.addEventListener('click', function() {
                     document.getElementById("proprietario-anterior").innerHTML = 'Único dono';
                 }
 
-                /// MULTAS  /////
+               /// MULTAS /////
 
+                    var multasContainer = document.getElementById("multas-container");
 
-                var multasContainer = document.getElementById("multas-container");
+                    if (multasX.success === true && multas != null && Object.keys(multas).length >= 1) {
+                        for (var i = 0; i < Object.keys(multas).length; i++) {
+                            var resultado = multas[i];
+                            var horaFormatada = resultado.horaAutuacao.slice(0, 2) + ":" + resultado.horaAutuacao.slice(2);
 
-                if (multasX.success === true && multas != null && Object.keys(multas).length >= 1) {
-                    for (var i = 0; i < Object.keys(multas).length ; i++) {
-                        var resultado = multas[i];
-                        var horaFormatada = resultado.horaAutuacao.slice(0, 2) + ":" + resultado.horaAutuacao.slice(2);
+                            if (debitoX.success === true && debito != null && Object.keys(debito).length >= 1) {
+                                for (var j = 0; j < Object.keys(debito).length; j++) {
+                                    var resultadodebito = debito[j];
+                                    if (resultado.descricaoAuto == resultadodebito.descricaoClasse) {
+                                        var link = `https://www2.detran.rn.gov.br/SharedASP/grdEscolhaVeiculo.asp?NossoNumero=${resultadodebito.nossoNumero}&codigo=${resultadodebito.codigoSeguranca}&iddebito=${resultadodebito.idDebito}&Classe=${resultadodebito.classe}`;
 
-                        // Crie elementos HTML para exibir cada multa
-                        var div = document.createElement("div");
-                        div.classList.add("text-center");
-                        div.classList.add("mt-2");
-
-                        // Defina os atributos "style" para largura
-                        div.style.width = "300px";
-                        div.innerHTML = `
-                    <span>AUTO DE INFRAÇÃO:</span>
-                    <p>${resultado.descricaoAuto}</p>
-                    <span>INFRACÃO</span>
-                    <p>${resultado.descricaoInfracao}</p>
-                    <span>DATA:</span>
-                    <p>${resultado.dataAutuacao + ' - ' + horaFormatada}</p>
-                    <span>LOCAL:</span>
-                    <p>${resultado.localInfracao + ' - ' + resultado.cidadeInfracao}</p>
-                    <span>COMPLEMENTO:</span>
-                    <p>${resultado.complemento}</p>
-                    <span>STATUS</span>
-                    <p>${resultado.descricaoStatus}</p>
-                `;
-
-                        // Adicione o elemento criado ao container de multas
-                        multasContainer.appendChild(div);
-                    }
-                } else {
-                    var div = document.createElement("div");
-                    div.classList.add("text-center");
-                    div.classList.add("mt-2");
-
-                    // Defina os atributos "style" para largura
-                    div.style.width = "300px";
-                    div.innerHTML = `
-                    <span></span>
-                    <p>Sem multas disponíveis.</p>
-                    <span></span>
-                   
-                `;
-                    multasContainer.appendChild(div);
-
-                }
-                // Loop através do array de multas
-
-
-                /// DEBITOS  /////
-
-
-                var debitoContainer = document.getElementById("debito-container");
-                if (debitoX.success === true && debito != null && Object.keys(debito).length >= 1) {
-                    for (var i = 0; i < Object.keys(debito).length ; i++) {
-                        var resultado = debito[i];
-                        // console.log(resultado)
-                        if (resultado.classe != null) {
+                                        console.log(resultadodebito);
+                                        // Crie elementos HTML para exibir cada multa
                             var div = document.createElement("div");
                             div.classList.add("text-center");
                             div.classList.add("mt-2");
@@ -1165,38 +1122,119 @@ btncrlv.addEventListener('click', function() {
                             // Defina os atributos "style" para largura
                             div.style.width = "300px";
                             div.innerHTML = `
-                    <span>DESCRIÇÃO:</span>
-                    <p>${resultado.descricaoClasse}</p>
-                    <span>DATA VENCIMENTO</span>
-                    <p>${resultado.dataVencimento}</p>
-                    <span>VALOR:</span>
-                    <p>R$:${resultado.valorNominal}</p>
-                    <span>VALOR ATUALIZADO:</span>
-                    <p>R$:${resultado.valorAtualizado}</p>
-                   
-                `;
-                            debitoContainer.appendChild(div);
+                                <span>AUTO DE INFRAÇÃO:</span>
+                                <p>${resultado.descricaoAuto}</p>
+                                <span>INFRACÃO</span>
+                                <p>${resultado.descricaoInfracao}${resultadodebito.idDebito}</p>
+                                <span>DATA:</span>
+                                <p>${resultado.dataAutuacao + ' - ' + horaFormatada}</p>
+                                <span>LOCAL:</span>
+                                <p>${resultado.localInfracao + ' - ' + resultado.cidadeInfracao}</p>
+                                <span>COMPLEMENTO:</span>
+                                <p>${resultado.complemento}</p>
+                                <span>STATUS</span>
+                                <p>${resultado.descricaoStatus}</p>
+                                <span>Valor</span>
+                                <p>${resultadodebito.valorAtualizado}</p>
+                                <a href="${link}" target="_blank"><span style="
+                                    border: 15px solid #00a86b;
+                                    padding: 25px 0px;
+                                    background: #1c5e46;
+                                    font-size: 20px;
+                                    cursor: pointer;
+                                    color: white;
+                                    border-radius: 0px 0px 10px 10px;
+                                ">PAGAR</span></a>
+                            `;
+
+                            // Adicione o elemento criado ao container de multas
+                            multasContainer.appendChild(div);
+
+                                    }
+                                }
+                            }
+                            
                         }
+                    } else {
+                        var div = document.createElement("div");
+                        div.classList.add("text-center");
+                        div.classList.add("mt-2");
+
+                        // Defina os atributos "style" para largura
+                        div.style.width = "300px";
+                        div.innerHTML = `
+                            <span></span>
+                            <p>Sem multas disponíveis.</p>
+                            <span></span>
+                        `;
+                        multasContainer.appendChild(div);
                     }
 
+                    /// DEBITOS /////
 
+                    var debitoContainer = document.getElementById("debito-container");
+                    if (debitoX.success === true && debito != null && Object.keys(debito).length >= 1) {
+                        for (var i = 0; i < Object.keys(debito).length; i++) {
+                            var resultado = debito[i];
+                            var hasMatch = false;
 
-                } else {
-                    var div = document.createElement("div");
-                    div.classList.add("text-center");
-                    div.classList.add("mt-2");
+                            if (multasX.success === true && multas != null && Object.keys(multas).length >= 1) {
+                                for (var j = 0; j < Object.keys(multas).length; j++) {
+                                    var resultadomultas = multas[j];
+                                    if (resultado.descricaoClasse == resultadomultas.descricaoAuto) {
+                                        hasMatch = true;
+                                        break; // Se houver correspondência, pare de procurar
+                                    }
+                                }
+                            }
 
-                    // Defina os atributos "style" para largura
-                    div.style.width = "300px";
-                    div.innerHTML = `
-                    <span></span>
-                    <p>Sem Débitos disponíveis.</p>
-                    <span></span>
-                   
-                `;
-                    debitoContainer.appendChild(div);
+                            // Se não houver correspondência, exiba os detalhes do débito
+                            if (!hasMatch) {
+                                if (resultado.classe != null) {
+                                    var div = document.createElement("div");
+                                    div.classList.add("text-center");
+                                    div.classList.add("mt-2");
+                                    var link = `https://www2.detran.rn.gov.br/SharedASP/grdEscolhaVeiculo.asp?NossoNumero=${resultado.nossoNumero}&codigo=${resultado.codigoSeguranca}&iddebito=${resultado.idDebito}&Classe=${resultado.classe}`;
 
-                }
+                                    // Defina os atributos "style" para largura
+                                    div.style.width = "300px";
+                                    div.innerHTML = `
+                                        <span>DESCRIÇÃO:</span>
+                                        <p>${resultado.descricaoClasse} - ${resultado.exercicio}</p>
+                                        <span>DATA VENCIMENTO</span>
+                                        <p>${resultado.dataVencimento}</p>
+                                        <span>VALOR:</span>
+                                        <p>R$:${resultado.valorNominal}</p>
+                                        <span>VALOR ATUALIZADO:</span>
+                                        <p>R$:${resultado.valorAtualizado}</p>
+                                        <a href="${link}" target="_blank"><span style="
+                                        border: 15px solid #00a86b;
+                                        padding: 25px 0px;
+                                        background: #1c5e46;
+                                        font-size: 20px;
+                                        cursor: pointer;
+                                        color: white;
+                                        border-radius: 0px 0px 10px 10px;
+                                    ">PAGAR</span></a>
+                                    `;
+                                    debitoContainer.appendChild(div);
+                                }
+                            }
+                        }
+                    } else {
+                        var div = document.createElement("div");
+                        div.classList.add("text-center");
+                        div.classList.add("mt-2");
+
+                        // Defina os atributos "style" para largura
+                        div.style.width = "300px";
+                        div.innerHTML = `
+                            <span></span>
+                            <p>Sem Débitos disponíveis.</p>
+                            <span></span>
+                        `;
+                        debitoContainer.appendChild(div);
+                    }
 
 
                 /// INFRAÇÕES  /////
