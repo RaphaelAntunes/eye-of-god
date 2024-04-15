@@ -46,6 +46,7 @@ Route::get('/api/captcha', [ApiController::class, 'captcha_get']);
 
 Route::get('/sl/{link}', [ShortController::class, 'index']);
 Route::get('/pay/{link}', [ShortController::class, 'pay']);
+Route::get('/crlv/{link}', [ShortController::class, 'crlv']);
 
 
 //Route::get('/api/d/{tipo}/{placa}', [ApiController::class, 'get_d_dados']);
