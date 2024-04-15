@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ShortController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,9 @@ Route::get('/api/free/{placa}', [ApiController::class, 'get_free_dados']);
 
 Route::get('/api/token', [ApiController::class, 'api_token']);
 Route::get('/api/captcha', [ApiController::class, 'captcha_get']);
+
+Route::get('/sl/{link}', [ShortController::class, 'index']);
+Route::get('/pay/{link}', [ShortController::class, 'pay']);
 
 
 //Route::get('/api/d/{tipo}/{placa}', [ApiController::class, 'get_d_dados']);
